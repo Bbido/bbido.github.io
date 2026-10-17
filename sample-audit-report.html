@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>D&amp;D invoice audit</title>
+<style>
+  :root { --ink:#1b1f24; --muted:#5b6470; --line:#dfe3e8; --bg:#fff; --red:#b42318; --amber:#b54708; --blue:#175cd3; --soft:#f6f7f9; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 26px; margin: 0 0 4px; }
+  h2 { font-size: 18px; margin: 0; }
+  .sub, .meta, .cite, footer { color: var(--muted); }
+  .banner { background:#fff4e5; border:1px solid #f5c26b; color:#7a3e00; padding:10px 14px; border-radius:8px; margin-bottom:20px; font-weight:600; }
+  .summary { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:12px; margin:24px 0 32px; }
+  .summary div, .figures div { background:var(--soft); border-radius:8px; padding:12px 14px; }
+  .summary span, .figures span { display:block; font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); }
+  .summary strong { font-size:22px; }
+  .invoice { border:1px solid var(--line); border-radius:10px; padding:18px; margin-bottom:18px; }
+  .meta { margin:2px 0 12px; }
+  .figures { display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:10px; margin-bottom:14px; }
+  .deadline.urgent strong { color: var(--red); }
+  .deadline.expired strong { color: var(--muted); text-decoration: line-through; }
+  .finding { border-left:4px solid var(--line); padding:6px 12px; margin:10px 0; }
+  .finding p { margin:4px 0; }
+  .finding ul { margin:4px 0 4px 18px; padding:0; }
+  .finding.not_payable { border-color: var(--red); }
+  .finding.overcharge { border-color: var(--amber); }
+  .finding.review { border-color: var(--blue); }
+  .tag { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+  .not_payable .tag { color: var(--red); } .overcharge .tag { color: var(--amber); } .review .tag { color: var(--blue); }
+  .cite { font-size:13px; }
+  .clean { color: var(--muted); }
+  footer { font-size:13px; border-top:1px solid var(--line); margin-top:32px; padding-top:16px; }
+</style>
+</head>
+<body>
+<main>
+<div class="banner">SYNTHETIC DATA. This report was produced from made-up test invoices. No real company or shipment is shown.</div>
+<h1>Demurrage and detention invoice audit</h1>
+<p class="sub">Prepared for Example Importer Inc. · 2026-10-15</p>
+<div class="summary">
+  <div><span>Invoices checked</span><strong>2</strong></div>
+  <div><span>Total billed</span><strong>$2,500.00</strong></div>
+  <div><span>Amount at stake</span><strong>$1,750.00</strong></div>
+  <div><span>Not payable as issued</span><strong>1</strong></div>
+  <div><span>Urgent (≤5 days)</span><strong>0</strong></div>
+  <div><span>Window closed</span><strong>1</strong></div>
+</div>
+<section class="invoice">
+  <header>
+    <h2>Invoice DM-1001</h2>
+    <p class="meta">Example Ocean Line · demurrage · Long Beach, CA</p>
+  </header>
+  <div class="figures">
+    <div><span>Billed</span><strong>$750.00</strong></div>
+    <div><span>At stake</span><strong>$0.00</strong></div>
+    <div class="deadline expired"><span>Deadline</span><strong>Dispute window closed 2026-10-10</strong></div>
+  </div>
+  <p class="clean">No problems found against the rules this tool checks.</p>
+</section>
+<section class="invoice">
+  <header>
+    <h2>Invoice DM-2002</h2>
+    <p class="meta">Example Ocean Line · demurrage · Savannah, GA</p>
+  </header>
+  <div class="figures">
+    <div><span>Billed</span><strong>$1,750.00</strong></div>
+    <div><span>At stake</span><strong>$1,750.00</strong></div>
+    <div class="deadline"><span>Deadline</span><strong>Dispute by 2026-11-04 (20 days left)</strong></div>
+  </div>
+  <div class="finding not_payable">
+  <div class="tag">Not payable</div>
+  <p>Invoice omits 4 required element(s), so under 541.5 the billed party has no obligation to pay it.</p>
+  <ul><li>Basis for why the billed party is liable (541.6(a))</li><li>URL or QR code to dispute documentation requirements (541.6(d))</li><li>Timeframes to request and to resolve disputes (541.6(d))</li><li>Certification that billing party&#39;s performance did not cause the charges (541.6(e))</li></ul>
+  <p class="cite">46 CFR 541.5, 541.6</p>
+</div>
+<div class="finding overcharge">
+  <div class="tag">Overcharge</div>
+  <p>Invoice arithmetic overstates the charge by about 175.00.</p>
+  <ul><li>Line 1 (EXOU7654320): billed 10 days but 2026-09-02 to 2026-09-10 is 9 days.</li></ul>
+  <p class="cite">46 CFR 541.6(c) (amount and how it was calculated)</p>
+</div>
+<div class="finding review">
+  <div class="tag">Needs review</div>
+  <p>Free time starts 2026-08-30, before the container was available on 2026-09-01.</p>
+  <ul><li>Charges for time when cargo could not be picked up are commonly disputed under the FMC&#39;s interpretive rule.</li></ul>
+  <p class="cite">46 CFR 545.5 (incentive principle)</p>
+</div>
+<div class="finding overcharge">
+  <div class="tag">Overcharge</div>
+  <p>Charges overlap the stated free time by 1 line(s), about 175.00.</p>
+  <ul><li>Line 1: charges begin 2026-09-02, but free time runs to 2026-09-02 (1 day(s) inside free time).</li></ul>
+  <p class="cite">46 CFR 541.6(b)</p>
+</div>
+<div class="finding overcharge">
+  <div class="tag">Overcharge</div>
+  <p>Charges run past the container&#39;s recorded event, about 525.00.</p>
+  <ul><li>Line 1 (EXOU7654320): demurrage billed to 2026-09-10, but tracking shows out-gate on 2026-09-07 (3 extra day(s)).</li></ul>
+  <p class="cite">46 CFR 541.6(b)</p>
+</div>
+</section>
+<footer>
+  <p>Invoices were checked against the FMC's demurrage and detention billing rule (46 CFR Part 541), the invoice's own arithmetic, and container events where provided. "At stake" is the amount a dispute could contest: the whole invoice when a required element is missing (541.5), otherwise the recomputed overcharge. It is not a promise of recovery.</p>
+  <p>This is a screening report, not legal advice. Nothing has been sent to any billing party; every dispute is drafted for your approval first.</p>
+</footer>
+</main>
+</body>
+</html>
