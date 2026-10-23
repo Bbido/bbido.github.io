@@ -1,85 +1,233 @@
 <!doctype html>
+<!-- FreeTime Check website v2, published 2026-10-23.
+     Every claim is an FMC rule fact or a description of the offer. No customers, results or savings are claimed because none exist yet. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FreeTime Check: demurrage and detention invoice audits</title>
+<title>FreeTime Check | Demurrage and detention invoice audits for US importers</title>
+<meta name="description" content="We check your ocean demurrage and detention invoices against the FMC billing rule (46 CFR 541) and help you dispute the ones that fail. Free audit. You pay only from what is saved.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b4f94'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11.5' stroke='white' stroke-width='3.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
-  :root { --ink:#16202a; --muted:#56616d; --line:#dfe3e8; --accent:#0b5cad; --bg:#ffffff; --soft:#f4f6f8; }
-  @media (prefers-color-scheme: dark) { :root { --ink:#e8edf2; --muted:#a3adb8; --line:#2c3640; --accent:#6aa9ec; --bg:#11171d; --soft:#18212a; } }
+  :root { --ink:#132030; --muted:#566273; --line:#e2e6ec; --accent:#0b4f94; --accent-2:#e8f1fb; --bg:#ffffff; --soft:#f5f7fa; --ok:#127a4a; --warn:#b54708; --bad:#b42318; }
   * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:17px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
-  main { max-width: 760px; margin: 0 auto; padding: 48px 16px 64px; }
-  h1 { font-size: 2.1rem; line-height:1.2; margin:0 0 16px; }
-  h2 { font-size: 1.25rem; margin: 40px 0 12px; }
-  p.lead { font-size: 1.15rem; color: var(--muted); margin: 0 0 24px; }
-  .cta { display:inline-block; background:var(--accent); color:#fff; padding:12px 20px; border-radius:8px; text-decoration:none; font-weight:600; }
-  .box { background:var(--soft); border:1px solid var(--line); border-radius:10px; padding:20px; }
-  ol, ul { padding-left: 1.2em; }
-  li { margin: 6px 0; }
-  small, .note { color: var(--muted); font-size: 0.9rem; }
-  table { width:100%; border-collapse: collapse; font-size: 0.95rem; }
-  td, th { border-bottom:1px solid var(--line); padding:8px 6px; text-align:left; vertical-align: top; }
+  html { scroll-behavior: smooth; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  a { color: var(--accent); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  header.top { border-bottom:1px solid var(--line); background:#fff; position:sticky; top:0; z-index:10; }
+  header.top .wrap { display:flex; align-items:center; justify-content:space-between; height:64px; gap:16px; }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:700; font-size:1.1rem; color:var(--ink); text-decoration:none; }
+  .brand svg { flex:none; }
+  nav a { color:var(--muted); text-decoration:none; margin-left:22px; font-size:.95rem; }
+  nav a:hover { color:var(--ink); }
+  nav a.btn-sm { color:#fff; background:var(--accent); padding:8px 14px; border-radius:8px; font-weight:600; }
+  @media (max-width: 760px) { nav a:not(.btn-sm) { display:none; } }
+  .hero { padding:64px 0 56px; background:linear-gradient(180deg, var(--accent-2), #fff); }
+  .hero .wrap { display:grid; grid-template-columns: 1.15fr .85fr; gap:48px; align-items:center; }
+  @media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; } }
+  .eyebrow { display:inline-block; font-size:.85rem; font-weight:600; color:var(--accent); background:#fff; border:1px solid #cfe0f3; padding:4px 10px; border-radius:999px; margin-bottom:16px; }
+  h1 { font-size: clamp(2rem, 4.2vw, 2.9rem); line-height:1.12; margin:0 0 18px; letter-spacing:-.01em; }
+  .lead { font-size:1.15rem; color:var(--muted); margin:0 0 28px; max-width: 36em; }
+  .btn { display:inline-block; background:var(--accent); color:#fff; padding:13px 22px; border-radius:9px; text-decoration:none; font-weight:600; }
+  .btn.ghost { background:#fff; color:var(--accent); border:1px solid #bcd3ee; margin-left:10px; }
+  @media (max-width: 480px) { .btn { display:block; text-align:center; } .btn.ghost { margin:10px 0 0; } }
+  .ticks { list-style:none; padding:0; margin:26px 0 0; display:flex; flex-wrap:wrap; gap:10px 22px; color:var(--muted); font-size:.95rem; }
+  .ticks li::before { content:"✓"; color:var(--ok); font-weight:700; margin-right:7px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:0 10px 30px rgba(19,32,48,.08); padding:20px; }
+  .card .lbl { font-size:.75rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+  .card h3 { margin:2px 0 14px; font-size:1.05rem; }
+  .row { display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--line); padding:9px 0; font-size:.95rem; gap:12px; }
+  .pill { flex:none; font-size:.75rem; font-weight:700; padding:2px 8px; border-radius:999px; white-space:nowrap; }
+  .pill.info { color:#175cd3; background:#eaf1fd; }
+  .pill.bad { color:var(--bad); background:#fdecea; } .pill.warn { color:var(--warn); background:#fef3e7; } .pill.ok { color:var(--ok); background:#e7f6ee; }
+  .card .foot { font-size:.8rem; color:var(--muted); margin-top:10px; }
+  section { padding:64px 0; }
+  section.alt { background:var(--soft); }
+  h2 { font-size:1.75rem; line-height:1.2; margin:0 0 12px; }
+  .intro { color:var(--muted); max-width: 40em; margin:0 0 32px; }
+  .grid3 { display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
+  .grid2 { display:grid; grid-template-columns:repeat(2, 1fr); gap:20px; }
+  @media (max-width: 860px) { .grid3, .grid2 { grid-template-columns:1fr; } }
+  @media (max-width: 520px) { .founder { flex-direction:column; } }
+  .tile { background:#fff; border:1px solid var(--line); border-radius:12px; padding:22px; }
+  .tile h3 { margin:0 0 6px; font-size:1.08rem; }
+  .tile p { margin:0; color:var(--muted); font-size:.98rem; }
+  .tile .cite { display:block; margin-top:10px; font-size:.8rem; color:var(--muted); }
+  .num { width:34px; height:34px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; margin-bottom:12px; }
+  .price { display:grid; grid-template-columns: 1fr 1fr; gap:24px; align-items:center; background:#fff; border:1px solid var(--line); border-radius:14px; padding:32px; }
+  @media (max-width: 860px) { .price { grid-template-columns:1fr; } }
+  .price .big { font-size:3rem; font-weight:800; color:var(--accent); line-height:1; }
+  .price ul { margin:0; padding-left:1.2em; color:var(--muted); }
+  table { width:100%; border-collapse:collapse; font-size:.96rem; background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  td, th { border-bottom:1px solid var(--line); padding:12px 14px; text-align:left; vertical-align:top; }
+  th { background:var(--soft); font-size:.85rem; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); }
+  tr:last-child td { border-bottom:0; }
+  .founder { display:flex; gap:20px; align-items:flex-start; }
+  .avatar { flex:none; width:64px; height:64px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.3rem; }
+  details { background:#fff; border:1px solid var(--line); border-radius:10px; padding:14px 18px; margin-bottom:10px; }
+  summary { cursor:pointer; font-weight:600; }
+  details p { color:var(--muted); margin:10px 0 0; }
+  .band { background:var(--accent); color:#fff; border-radius:16px; padding:40px; text-align:center; }
+  .band h2 { color:#fff; }
+  .band p { color:#d9e7f7; margin:0 auto 24px; max-width:36em; }
+  .band .btn { background:#fff; color:var(--accent); }
+  footer { border-top:1px solid var(--line); padding:28px 0 40px; color:var(--muted); font-size:.9rem; }
+  footer .wrap { display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; }
 </style>
 </head>
 <body>
-<main>
-  <h1>Stop paying demurrage and detention invoices you don't owe.</h1>
-  <p class="lead">Under US Federal Maritime Commission rules, a D&amp;D invoice that leaves out required information, or arrives more than 30 days after the charges end, does not have to be paid. We check every invoice you receive and dispute the ones that fail. You pay a share of what we save you, and nothing if we save nothing.</p>
-  <a class="cta" href="#audit">Get a free audit of last month's invoices</a>
 
-  <h2>What the rule requires on every invoice</h2>
-  <p>Since 28 May 2024, 46 CFR Part 541 requires carriers, terminals and NVOCCs to include, among other things:</p>
-  <table>
-    <tr><th>Category</th><th>Examples of required items</th></tr>
-    <tr><td>Identification</td><td>Bill of lading and container numbers, port of discharge, why you are the liable party</td></tr>
-    <tr><td>Timing</td><td>Invoice and due dates, free time in days with start and end dates, container availability date, the exact dates charged</td></tr>
-    <tr><td>Rates</td><td>Total due, the tariff rule or contract applied, the specific rates</td></tr>
-    <tr><td>Disputes</td><td>A contact, a web link describing what to submit, and the dispute timeframes</td></tr>
-    <tr><td>Certifications</td><td>That the charges follow FMC rules and the billing party's own performance did not cause them</td></tr>
-  </table>
-  <p class="note">You have at least 30 days from the invoice date to request a waiver or refund (541.8). Missing that window usually means paying.</p>
-
-  <h2>How it works</h2>
-  <ol>
-    <li>Forward your D&amp;D invoices to a private address we give you.</li>
-    <li>We check each one against the rule, recalculate free time and charged days, and compare them with container out-gate and return dates.</li>
-    <li>You see every finding and approve each dispute before it is sent. Nothing goes to a carrier without your say-so.</li>
-    <li>We track the carrier's reply and record what was waived or refunded.</li>
-  </ol>
-
-  <h2>Pricing</h2>
-  <div class="box">
-    <p><strong>25% of the money we save you</strong> (invoices withdrawn, reduced or refunded), billed monthly. No saving, no fee. No setup fee and no minimum term.</p>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#0b4f94"/><path d="M9 16.5l4.5 4.5L23 11.5" stroke="#fff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      FreeTime Check
+    </a>
+    <nav>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="sample-audit-report.html">Sample report</a>
+      <a href="#about">About</a>
+      <a class="btn-sm" href="#audit">Free audit</a>
+    </nav>
   </div>
+</header>
 
-  <h2>See what you get</h2>
-  <p>Here is a <a href="sample-audit-report.html">sample audit report</a> built from made-up invoices, so you can see exactly what we send back before you share anything.</p>
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">For US importers paying ocean demurrage and detention</span>
+      <h1>Check your demurrage and detention invoices before you pay them.</h1>
+      <p class="lead">Under the Federal Maritime Commission's billing rule, a D&amp;D invoice that leaves out required information, or arrives more than 30 days after the charges end, may not be payable. We check each invoice against the rule and help you dispute the ones that fail. You pay a share of what is actually saved, and nothing otherwise.</p>
+      <a class="btn" href="#audit">Get a free audit</a><a class="btn ghost" href="sample-audit-report.html">See a sample report</a>
+      <ul class="ticks">
+        <li>No upfront fees</li>
+        <li>No system logins needed</li>
+        <li>You approve every dispute</li>
+      </ul>
+    </div>
+    <div class="card" aria-label="Example of findings from a sample report">
+      <div class="lbl">Sample report, made-up invoices</div>
+      <h3>One month, Savannah and Long Beach</h3>
+      <div class="row"><span>DM-2002: 4 required details missing</span><span class="pill bad">Not payable</span></div>
+      <div class="row"><span>DM-2002: 3 days billed after out-gate</span><span class="pill warn">Overcharge</span></div>
+      <div class="row"><span>DM-2002: free time started before availability</span><span class="pill info">Review</span></div>
+      <div class="row"><span>DM-1001: matches the rule</span><span class="pill ok">OK</span></div>
+      <div class="foot">Illustration only. See the <a href="sample-audit-report.html">full sample report</a>.</div>
+    </div>
+  </div>
+</div>
 
-  <h2>Keeping your data safe</h2>
-  <ul>
-    <li><strong>Black out what we don't need.</strong> Before sending, cover account numbers, bank details, signatures and anything about your customers. We only need the dates, bill of lading and container numbers, free time and the charges.</li>
-    <li><strong>We never ask you to pay first.</strong> We are only paid after a carrier withdraws, reduces or refunds a charge. Nobody from us will ever ask for a deposit, a card number or a bank transfer up front.</li>
-    <li><strong>We never ask for logins.</strong> We don't need access to your carrier portals, email or systems.</li>
-    <li><strong>Nothing is sent without you.</strong> Every dispute is shown to you first, and you send or approve it yourself.</li>
-    <li><strong>Your files stay private.</strong> We use them only to audit your invoices, delete them within 90 days of finishing, or sooner if you ask. See our <a href="privacy.html">privacy policy</a>.</li>
-  </ul>
+<section>
+  <div class="wrap">
+    <h2>Why D&amp;D invoices often fail the rule</h2>
+    <p class="intro">Since May 28, 2024, carriers, marine terminals and NVOCCs must follow 46 CFR Part 541 when they bill demurrage or detention. Three things come up again and again.</p>
+    <div class="grid3">
+      <div class="tile"><h3>Required details are missing</h3><p>Every invoice must show items such as the free time, the container availability date, the rates applied, why you are the liable party, and how to dispute. If any are missing, you have no obligation to pay it.</p><span class="cite">46 CFR 541.5, 541.6</span></div>
+      <div class="tile"><h3>The invoice came too late</h3><p>A billing party that issues an invoice more than 30 days after the charges were last incurred loses the right to collect them.</p><span class="cite">46 CFR 541.7</span></div>
+      <div class="tile"><h3>The days don't add up</h3><p>We recalculate free time and charged days against the container's actual gate-out and return dates, and flag days billed in error.</p><span class="cite">46 CFR 541.6(b), 541.6(c)</span></div>
+    </div>
+  </div>
+</section>
 
-  <h2 id="audit">Free audit</h2>
-  <p>Send us one month of demurrage and detention invoices. Within two working days we'll tell you which ones appear not to be payable or overcharged, and by how much. You decide whether to go further.</p>
-  <p><a class="cta" href="mailto:Bubele.Bido@icloud.com?subject=Free%20D%26D%20audit">Email us your invoices</a></p>
-  <p class="note">Please include your name, company and roughly how many containers you import each month. Black out account and bank details first. We reply within one working day.</p>
+<section class="alt" id="how">
+  <div class="wrap">
+    <h2>How it works</h2>
+    <p class="intro">Three steps, no software to install and no access to your systems.</p>
+    <div class="grid3">
+      <div class="tile"><div class="num">1</div><h3>Send one month of invoices</h3><p>Email us your D&amp;D invoices as PDFs, with bank and account details blacked out.</p></div>
+      <div class="tile"><div class="num">2</div><h3>Get your report in 2 business days</h3><p>We check every invoice against the rule and show which ones look unpayable or overcharged, and by how much.</p></div>
+      <div class="tile"><div class="num">3</div><h3>You decide what to dispute</h3><p>We draft each dispute for your approval and track the reply. Nothing goes to a carrier without your say-so.</p></div>
+    </div>
+  </div>
+</section>
 
-  <h2>Questions</h2>
-  <p><strong>Is this legal advice?</strong> No. We compare invoices with published FMC rules and your container data, and draft disputes for your approval. For legal questions, talk to a maritime lawyer.</p>
-  <p><strong>Will disputing hurt my carrier relationship?</strong> Disputes are a normal part of the process the rule sets up. You approve every one, and you can exclude any carrier.</p>
-  <p><strong>What data do you need?</strong> The invoices, plus container numbers so we can look up terminal events. We use your data only to audit your invoices.</p>
-  <h2>Who we are</h2>
-  <p>FreeTime Check is run by Bido Ventures (Pty) Ltd, a small South African company (registration number 2026/830560/07) founded by Bubele Bido (<a href="https://www.linkedin.com/in/bubele-bido-99811677">LinkedIn</a>). We work remotely with US importers and use software to check every line of every invoice, so the audit costs you nothing and our fee depends only on results.</p>
-  <h2>Contact</h2>
-  <p>Email: Bubele.Bido@icloud.com<br>
-  Post: PO Box 158, Burgersdorp, 9744, South Africa</p>
-  <p class="note">Bido Ventures (Pty) Ltd, registered in South Africa, 2026/830560/07 · <a href="privacy.html">Privacy policy</a></p>
-</main>
+<section id="pricing">
+  <div class="wrap">
+    <h2>Simple pricing</h2>
+    <p class="intro">The audit is free. You only pay if we save you money.</p>
+    <div class="price">
+      <div>
+        <div class="big">25%</div>
+        <p style="margin:8px 0 0">of the charges withdrawn, reduced or refunded, billed monthly.</p>
+      </div>
+      <ul>
+        <li>No saving, no fee</li>
+        <li>No setup fee and no minimum term</li>
+        <li>We never ask for a deposit or card details up front</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <h2>What the rule requires on every invoice</h2>
+    <p class="intro">A summary of 46 CFR 541.6. You have at least 30 days from the invoice date to request a waiver or refund (541.8), so it pays to check early.</p>
+    <table>
+      <tr><th>Category</th><th>Examples of required items</th></tr>
+      <tr><td>Identification</td><td>Bill of lading and container numbers, port of discharge, why you are the liable party</td></tr>
+      <tr><td>Timing</td><td>Invoice and due dates, free time in days with start and end dates, container availability date, the exact dates charged</td></tr>
+      <tr><td>Rates</td><td>Total due, the tariff rule or contract applied, the specific rates</td></tr>
+      <tr><td>Disputes</td><td>A contact, a web link describing what to submit, and the dispute timeframes</td></tr>
+      <tr><td>Certifications</td><td>That the charges follow FMC rules and the billing party's own performance did not cause them</td></tr>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Keeping your data safe</h2>
+    <p class="intro">We only need what is on the invoice. Our full approach is in the <a href="privacy.html">privacy policy</a>.</p>
+    <div class="grid2">
+      <div class="tile"><h3>Black out what we don't need</h3><p>Cover account numbers, bank details, signatures and anything about your customers. We need the dates, B/L and container numbers, free time and charges.</p></div>
+      <div class="tile"><h3>No logins, ever</h3><p>We never ask for access to your carrier portals, email or systems.</p></div>
+      <div class="tile"><h3>Nothing is sent without you</h3><p>Every dispute is shown to you first, and you send or approve it yourself.</p></div>
+      <div class="tile"><h3>Your files are deleted</h3><p>We use them only to audit your invoices and delete them within 90 days of finishing, or sooner if you ask.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="about">
+  <div class="wrap">
+    <h2>Who we are</h2>
+    <div class="tile founder">
+      <div class="avatar" aria-hidden="true">BB</div>
+      <div>
+        <h3>Bubele Bido, founder</h3>
+        <p>FreeTime Check is run by Bido Ventures (Pty) Ltd, a small company registered in South Africa (registration number 2026/830560/07). We work remotely with US importers and use software to check every line of every invoice. That keeps the audit free and makes our fee depend only on results. <a href="https://www.linkedin.com/in/bubele-bido-99811677">Connect on LinkedIn</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Questions</h2>
+    <details><summary>Is this legal advice?</summary><p>No. We compare invoices with the published FMC rule and your container data, and draft disputes for your approval. For legal questions, talk to a maritime attorney.</p></details>
+    <details><summary>Will disputing hurt my carrier relationship?</summary><p>Disputes are a normal part of the process the rule sets up. You approve every one, and you can exclude any carrier.</p></details>
+    <details><summary>What do you need from me?</summary><p>The invoices, plus container numbers so we can check gate-out and return dates. Nothing else.</p></details>
+    <details><summary>Who pays if a dispute fails?</summary><p>Nobody. If a charge isn't withdrawn, reduced or refunded, there is no fee.</p></details>
+  </div>
+</section>
+
+<section id="audit" style="padding-top:0">
+  <div class="wrap">
+    <div class="band">
+      <h2>Get a free audit of last month's invoices</h2>
+      <p>Send one month of demurrage and detention invoices, with your name, company and roughly how many containers you import each month. We reply within one business day.</p>
+      <a class="btn" href="mailto:bubele@getfreetimecheck.com?subject=Free%20D%26D%20audit">Email bubele@getfreetimecheck.com</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Bido Ventures (Pty) Ltd · Reg. 2026/830560/07 · PO Box 158, Burgersdorp, 9744, South Africa</span>
+    <span><a href="privacy.html">Privacy policy</a> · <a href="sample-audit-report.html">Sample report</a> · <a href="mailto:bubele@getfreetimecheck.com">bubele@getfreetimecheck.com</a></span>
+  </div>
+</footer>
+
 </body>
 </html>

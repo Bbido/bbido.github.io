@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>D&amp;D invoice audit</title>
+<title>Sample D&amp;D invoice audit | FreeTime Check</title>
 <style>
   :root { --ink:#1b1f24; --muted:#5b6470; --line:#dfe3e8; --bg:#fff; --red:#b42318; --amber:#b54708; --blue:#175cd3; --soft:#f6f7f9; }
   * { box-sizing: border-box; }
@@ -37,9 +37,10 @@
 </head>
 <body>
 <main>
-<div class="banner">SYNTHETIC DATA. This report was produced from made-up test invoices. No real company or shipment is shown.</div>
+<p style="margin:0 0 16px"><a href="index.html" style="color:#0b4f94;text-decoration:none;font-weight:600">← FreeTime Check</a></p>
+<div class="banner">Sample report. It was made from invented test invoices, so no real company or shipment is shown. Your report looks the same, with your own invoices.</div>
 <h1>Demurrage and detention invoice audit</h1>
-<p class="sub">Prepared for Example Importer Inc. · 2026-10-15</p>
+<p class="sub">Prepared for Example Importer Inc. · October 15, 2026 · by FreeTime Check</p>
 <div class="summary">
   <div><span>Invoices checked</span><strong>2</strong></div>
   <div><span>Total billed</span><strong>$2,500.00</strong></div>
@@ -56,9 +57,9 @@
   <div class="figures">
     <div><span>Billed</span><strong>$750.00</strong></div>
     <div><span>At stake</span><strong>$0.00</strong></div>
-    <div class="deadline expired"><span>Deadline</span><strong>Dispute window closed 2026-10-10</strong></div>
+    <div class="deadline expired"><span>Deadline</span><strong>Dispute window closed October 10, 2026</strong></div>
   </div>
-  <p class="clean">No problems found against the rules this tool checks.</p>
+  <p class="clean">No problems found. This invoice includes the required details and the days add up.</p>
 </section>
 <section class="invoice">
   <header>
@@ -68,42 +69,43 @@
   <div class="figures">
     <div><span>Billed</span><strong>$1,750.00</strong></div>
     <div><span>At stake</span><strong>$1,750.00</strong></div>
-    <div class="deadline"><span>Deadline</span><strong>Dispute by 2026-11-04 (20 days left)</strong></div>
+    <div class="deadline"><span>Deadline</span><strong>Dispute by November 4, 2026 (20 days left)</strong></div>
   </div>
   <div class="finding not_payable">
   <div class="tag">Not payable</div>
-  <p>Invoice omits 4 required element(s), so under 541.5 the billed party has no obligation to pay it.</p>
+  <p>The invoice leaves out 4 required details, so under 541.5 you have no obligation to pay it.</p>
   <ul><li>Basis for why the billed party is liable (541.6(a))</li><li>URL or QR code to dispute documentation requirements (541.6(d))</li><li>Timeframes to request and to resolve disputes (541.6(d))</li><li>Certification that billing party&#39;s performance did not cause the charges (541.6(e))</li></ul>
   <p class="cite">46 CFR 541.5, 541.6</p>
 </div>
 <div class="finding overcharge">
   <div class="tag">Overcharge</div>
-  <p>Invoice arithmetic overstates the charge by about 175.00.</p>
-  <ul><li>Line 1 (EXOU7654320): billed 10 days but 2026-09-02 to 2026-09-10 is 9 days.</li></ul>
+  <p>The arithmetic overstates the charge by about $175.00.</p>
+  <ul><li>Line 1 (EXOU7654320): billed 10 days, but September 2 to September 10 is 9 days.</li></ul>
   <p class="cite">46 CFR 541.6(c) (amount and how it was calculated)</p>
 </div>
 <div class="finding review">
   <div class="tag">Needs review</div>
-  <p>Free time starts 2026-08-30, before the container was available on 2026-09-01.</p>
+  <p>Free time starts August 30, before the container was available on September 1.</p>
   <ul><li>Charges for time when cargo could not be picked up are commonly disputed under the FMC&#39;s interpretive rule.</li></ul>
   <p class="cite">46 CFR 545.5 (incentive principle)</p>
 </div>
 <div class="finding overcharge">
   <div class="tag">Overcharge</div>
-  <p>Charges overlap the stated free time by 1 line(s), about 175.00.</p>
-  <ul><li>Line 1: charges begin 2026-09-02, but free time runs to 2026-09-02 (1 day(s) inside free time).</li></ul>
+  <p>One charge line overlaps the stated free time, about $175.00.</p>
+  <ul><li>Line 1: charges begin September 2, but free time runs to September 2 (1 day inside free time).</li></ul>
   <p class="cite">46 CFR 541.6(b)</p>
 </div>
 <div class="finding overcharge">
   <div class="tag">Overcharge</div>
-  <p>Charges run past the container&#39;s recorded event, about 525.00.</p>
-  <ul><li>Line 1 (EXOU7654320): demurrage billed to 2026-09-10, but tracking shows out-gate on 2026-09-07 (3 extra day(s)).</li></ul>
+  <p>Charges run past the date the container left the terminal, about $525.00.</p>
+  <ul><li>Line 1 (EXOU7654320): demurrage billed to September 10, but tracking shows gate-out on September 7 (3 extra days).</li></ul>
   <p class="cite">46 CFR 541.6(b)</p>
 </div>
 </section>
 <footer>
   <p>Invoices were checked against the FMC's demurrage and detention billing rule (46 CFR Part 541), the invoice's own arithmetic, and container events where provided. "At stake" is the amount a dispute could contest: the whole invoice when a required element is missing (541.5), otherwise the recomputed overcharge. It is not a promise of recovery.</p>
   <p>This is a screening report, not legal advice. Nothing has been sent to any billing party; every dispute is drafted for your approval first.</p>
+  <p style="font-size:15px;color:#1b1f24"><strong>Want this for your own invoices?</strong> Email one month of D&amp;D invoices to <a href="mailto:bubele@getfreetimecheck.com?subject=Free%20D%26D%20audit">bubele@getfreetimecheck.com</a>. The audit is free.</p>
 </footer>
 </main>
 </body>
