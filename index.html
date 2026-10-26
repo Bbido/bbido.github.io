@@ -1,6 +1,7 @@
 <!doctype html>
-<!-- FreeTime Check website v2, published 2026-10-23.
-     Every claim is an FMC rule fact or a description of the offer. No customers, results or savings are claimed because none exist yet. -->
+<!-- FreeTime Check website v3, published 2026-10-26 with Musa's OK.
+     Every claim is an FMC rule fact or a description of the offer. No customers, results or savings are claimed because none exist yet.
+     The annotated invoice and pricing example are labelled illustrations. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -9,69 +10,143 @@
 <meta name="description" content="We check your ocean demurrage and detention invoices against the FMC billing rule (46 CFR 541) and help you dispute the ones that fail. Free audit. You pay only from what is saved.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b4f94'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11.5' stroke='white' stroke-width='3.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
-  :root { --ink:#132030; --muted:#566273; --line:#e2e6ec; --accent:#0b4f94; --accent-2:#e8f1fb; --bg:#ffffff; --soft:#f5f7fa; --ok:#127a4a; --warn:#b54708; --bad:#b42318; }
+  :root { --ink:#132030; --muted:#566273; --line:#e2e6ec; --accent:#0b4f94; --accent-2:#e8f1fb; --bg:#ffffff; --soft:#f5f7fa; --ok:#127a4a; --okbg:#e7f6ee; --warn:#b54708; --warnbg:#fef3e7; --bad:#b42318; --badbg:#fdecea; }
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-padding-top: 76px; }
   body { margin:0; background:var(--bg); color:var(--ink); font:17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
   a { color: var(--accent); }
   .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
-  header.top { border-bottom:1px solid var(--line); background:#fff; position:sticky; top:0; z-index:10; }
+
+  /* Header */
+  header.top { border-bottom:1px solid var(--line); background:rgba(255,255,255,.96); position:sticky; top:0; z-index:10; backdrop-filter:saturate(1.4) blur(6px); }
   header.top .wrap { display:flex; align-items:center; justify-content:space-between; height:64px; gap:16px; }
   .brand { display:flex; align-items:center; gap:10px; font-weight:700; font-size:1.1rem; color:var(--ink); text-decoration:none; }
   .brand svg { flex:none; }
   nav a { color:var(--muted); text-decoration:none; margin-left:22px; font-size:.95rem; }
   nav a:hover { color:var(--ink); }
   nav a.btn-sm { color:#fff; background:var(--accent); padding:8px 14px; border-radius:8px; font-weight:600; }
-  @media (max-width: 760px) { nav a:not(.btn-sm) { display:none; } }
-  .hero { padding:64px 0 56px; background:linear-gradient(180deg, var(--accent-2), #fff); }
-  .hero .wrap { display:grid; grid-template-columns: 1.15fr .85fr; gap:48px; align-items:center; }
-  @media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; } }
+  .subnav { display:none; }
+  @media (max-width: 760px) {
+    nav a:not(.btn-sm) { display:none; }
+    .subnav { display:flex; gap:8px; overflow-x:auto; padding:0 20px 10px; scrollbar-width:none; }
+    .subnav::-webkit-scrollbar { display:none; }
+    .subnav a { flex:none; font-size:.85rem; color:var(--ink); text-decoration:none; background:var(--soft); border:1px solid var(--line); padding:5px 12px; border-radius:999px; }
+    html { scroll-padding-top: 112px; }
+  }
+
+  /* Hero */
+  .hero { padding:60px 0 56px; background:linear-gradient(180deg, var(--accent-2), #fff); }
+  .hero .wrap { display:grid; grid-template-columns: 1.1fr .9fr; gap:48px; align-items:center; }
+  @media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; gap:32px; } .hero { padding:36px 0 40px; } }
   .eyebrow { display:inline-block; font-size:.85rem; font-weight:600; color:var(--accent); background:#fff; border:1px solid #cfe0f3; padding:4px 10px; border-radius:999px; margin-bottom:16px; }
   h1 { font-size: clamp(2rem, 4.2vw, 2.9rem); line-height:1.12; margin:0 0 18px; letter-spacing:-.01em; }
-  .lead { font-size:1.15rem; color:var(--muted); margin:0 0 28px; max-width: 36em; }
-  .btn { display:inline-block; background:var(--accent); color:#fff; padding:13px 22px; border-radius:9px; text-decoration:none; font-weight:600; }
+  .lead { font-size:1.15rem; color:var(--muted); margin:0 0 28px; max-width: 34em; }
+  .btn { display:inline-block; background:var(--accent); color:#fff; padding:13px 22px; border-radius:9px; text-decoration:none; font-weight:600; border:1px solid var(--accent); }
   .btn.ghost { background:#fff; color:var(--accent); border:1px solid #bcd3ee; margin-left:10px; }
   @media (max-width: 480px) { .btn { display:block; text-align:center; } .btn.ghost { margin:10px 0 0; } }
-  .ticks { list-style:none; padding:0; margin:26px 0 0; display:flex; flex-wrap:wrap; gap:10px 22px; color:var(--muted); font-size:.95rem; }
+  .ticks { list-style:none; padding:0; margin:24px 0 0; display:flex; flex-wrap:wrap; gap:8px 22px; color:var(--muted); font-size:.95rem; }
   .ticks li::before { content:"✓"; color:var(--ok); font-weight:700; margin-right:7px; }
-  .card { background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:0 10px 30px rgba(19,32,48,.08); padding:20px; }
-  .card .lbl { font-size:.75rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
-  .card h3 { margin:2px 0 14px; font-size:1.05rem; }
-  .row { display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--line); padding:9px 0; font-size:.95rem; gap:12px; }
-  .pill { flex:none; font-size:.75rem; font-weight:700; padding:2px 8px; border-radius:999px; white-space:nowrap; }
-  .pill.info { color:#175cd3; background:#eaf1fd; }
-  .pill.bad { color:var(--bad); background:#fdecea; } .pill.warn { color:var(--warn); background:#fef3e7; } .pill.ok { color:var(--ok); background:#e7f6ee; }
-  .card .foot { font-size:.8rem; color:var(--muted); margin-top:10px; }
+
+  /* Annotated invoice illustration */
+  .inv { background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:0 14px 34px rgba(19,32,48,.10); padding:18px 18px 14px; font-size:.9rem; }
+  .inv-head { display:flex; justify-content:space-between; align-items:baseline; gap:10px; border-bottom:2px solid var(--ink); padding-bottom:8px; margin-bottom:6px; }
+  .inv-head b { font-size:1rem; letter-spacing:.02em; }
+  .inv-head span { font-size:.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+  .f { display:grid; grid-template-columns: 1fr auto; gap:10px; align-items:center; padding:7px 0; border-bottom:1px dashed var(--line); }
+  .f:last-of-type { border-bottom:0; }
+  .f .k { color:var(--muted); font-size:.78rem; display:block; line-height:1.2; }
+  .f .v { font-weight:600; }
+  .f.miss .v { color:var(--bad); font-weight:600; font-style:italic; }
+  .tag { font-size:.72rem; font-weight:700; padding:3px 8px; border-radius:999px; white-space:nowrap; }
+  .tag.ok { color:var(--ok); background:var(--okbg); }
+  .tag.bad { color:var(--bad); background:var(--badbg); }
+  .tag.warn { color:var(--warn); background:var(--warnbg); }
+  .verdict { margin-top:10px; background:var(--badbg); color:var(--bad); border-radius:10px; padding:10px 12px; font-weight:600; font-size:.88rem; display:flex; gap:8px; align-items:flex-start; }
+  .inv .cap { margin-top:8px; font-size:.76rem; color:var(--muted); }
+
+  /* Sections */
   section { padding:64px 0; }
+  @media (max-width: 760px) { section { padding:44px 0; } }
   section.alt { background:var(--soft); }
-  h2 { font-size:1.75rem; line-height:1.2; margin:0 0 12px; }
+  h2 { font-size:1.75rem; line-height:1.2; margin:0 0 10px; }
   .intro { color:var(--muted); max-width: 40em; margin:0 0 32px; }
+
+  /* Stepper */
+  .steps { list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; position:relative; }
+  .steps::before { content:""; position:absolute; top:34px; left:16%; right:16%; height:3px; background:repeating-linear-gradient(90deg, #bcd3ee 0 10px, transparent 10px 18px); z-index:0; }
+  .step { position:relative; z-index:1; text-align:center; }
+  .ico { width:68px; height:68px; margin:0 auto 14px; border-radius:50%; background:#fff; border:3px solid var(--accent); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 8px var(--soft); }
+  .ico svg { width:30px; height:30px; }
+  .when { display:inline-block; font-size:.75rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--accent); background:var(--accent-2); padding:3px 10px; border-radius:999px; margin-bottom:8px; }
+  .step h3 { margin:0 0 6px; font-size:1.12rem; }
+  .step p { margin:0 auto; color:var(--muted); font-size:.97rem; max-width:22em; }
+  .step .out { margin-top:12px; display:inline-block; font-size:.85rem; color:var(--ink); background:#fff; border:1px solid var(--line); border-radius:8px; padding:6px 10px; }
+  @media (max-width: 760px) {
+    .steps { grid-template-columns:1fr; gap:0; }
+    .steps::before { top:34px; bottom:34px; left:33px; right:auto; width:3px; height:auto; background:repeating-linear-gradient(180deg, #bcd3ee 0 10px, transparent 10px 18px); }
+    .step { display:grid; grid-template-columns:68px 1fr; gap:16px; text-align:left; padding-bottom:26px; }
+    .step:last-child { padding-bottom:0; }
+    .ico { margin:0; }
+    .step p { margin:0; }
+  }
+  .reassure { margin-top:34px; display:flex; flex-wrap:wrap; justify-content:center; gap:10px 26px; color:var(--muted); font-size:.93rem; }
+  .reassure span::before { content:"✓"; color:var(--ok); font-weight:700; margin-right:7px; }
+
+  /* Reasons */
   .grid3 { display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
-  .grid2 { display:grid; grid-template-columns:repeat(2, 1fr); gap:20px; }
-  @media (max-width: 860px) { .grid3, .grid2 { grid-template-columns:1fr; } }
-  @media (max-width: 520px) { .founder { flex-direction:column; } }
+  .grid4 { display:grid; grid-template-columns:repeat(4, 1fr); gap:18px; }
+  @media (max-width: 860px) { .grid3 { grid-template-columns:1fr; } .grid4 { grid-template-columns:1fr 1fr; } }
+  @media (max-width: 480px) { .grid4 { grid-template-columns:1fr; } }
   .tile { background:#fff; border:1px solid var(--line); border-radius:12px; padding:22px; }
   .tile h3 { margin:0 0 6px; font-size:1.08rem; }
-  .tile p { margin:0; color:var(--muted); font-size:.98rem; }
+  .tile p { margin:0; color:var(--muted); font-size:.97rem; }
   .tile .cite { display:block; margin-top:10px; font-size:.8rem; color:var(--muted); }
-  .num { width:34px; height:34px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; margin-bottom:12px; }
-  .price { display:grid; grid-template-columns: 1fr 1fr; gap:24px; align-items:center; background:#fff; border:1px solid var(--line); border-radius:14px; padding:32px; }
-  @media (max-width: 860px) { .price { grid-template-columns:1fr; } }
-  .price .big { font-size:3rem; font-weight:800; color:var(--accent); line-height:1; }
-  .price ul { margin:0; padding-left:1.2em; color:var(--muted); }
-  table { width:100%; border-collapse:collapse; font-size:.96rem; background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
-  td, th { border-bottom:1px solid var(--line); padding:12px 14px; text-align:left; vertical-align:top; }
-  th { background:var(--soft); font-size:.85rem; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); }
-  tr:last-child td { border-bottom:0; }
+  .badge { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:12px; }
+  .badge svg { width:22px; height:22px; }
+  .b-bad { background:var(--badbg); color:var(--bad); }
+  .b-warn { background:var(--warnbg); color:var(--warn); }
+  .b-info { background:var(--accent-2); color:var(--accent); }
+
+  /* Pricing */
+  .price { display:grid; grid-template-columns: .9fr 1.1fr; gap:28px; align-items:center; background:#fff; border:1px solid var(--line); border-radius:14px; padding:32px; }
+  @media (max-width: 860px) { .price { grid-template-columns:1fr; padding:24px; } }
+  .price .big { font-size:3.2rem; font-weight:800; color:var(--accent); line-height:1; }
+  .price ul { margin:16px 0 0; padding-left:1.2em; color:var(--muted); }
+  .example { background:var(--soft); border-radius:12px; padding:18px 20px; }
+  .example .lbl { font-size:.75rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:10px; }
+  .bar { display:flex; height:40px; border-radius:8px; overflow:hidden; font-size:.85rem; font-weight:700; color:#fff; }
+  .bar .keep { flex:3; background:var(--ok); display:flex; align-items:center; padding-left:12px; }
+  .bar .fee { flex:1; background:var(--accent); display:flex; align-items:center; justify-content:center; }
+  .example p { margin:10px 0 0; font-size:.92rem; color:var(--muted); }
+
+  /* Rule table */
+  details.rule { background:#fff; border:1px solid var(--line); border-radius:12px; padding:0; }
+  details.rule > summary { padding:16px 20px; font-weight:600; cursor:pointer; }
+  table { width:100%; border-collapse:collapse; font-size:.95rem; }
+  td, th { border-top:1px solid var(--line); padding:12px 20px; text-align:left; vertical-align:top; }
+  th { background:var(--soft); font-size:.8rem; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); }
+  @media (max-width: 520px) { td, th { padding:10px 14px; } td:first-child { font-weight:600; white-space:nowrap; } }
+
+  /* Trust row */
+  .trust .tile { padding:18px; }
+  .trust .tile h3 { font-size:1rem; display:flex; align-items:center; gap:9px; }
+  .trust .tile h3 svg { flex:none; width:20px; height:20px; color:var(--accent); }
+
   .founder { display:flex; gap:20px; align-items:flex-start; }
+  @media (max-width: 520px) { .founder { flex-direction:column; } }
   .avatar { flex:none; width:64px; height:64px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.3rem; }
-  details { background:#fff; border:1px solid var(--line); border-radius:10px; padding:14px 18px; margin-bottom:10px; }
-  summary { cursor:pointer; font-weight:600; }
-  details p { color:var(--muted); margin:10px 0 0; }
+
+  details.q { background:#fff; border:1px solid var(--line); border-radius:10px; padding:14px 18px; margin-bottom:10px; }
+  details.q summary { cursor:pointer; font-weight:600; }
+  details.q p { color:var(--muted); margin:10px 0 0; }
+
   .band { background:var(--accent); color:#fff; border-radius:16px; padding:40px; text-align:center; }
+  @media (max-width: 520px) { .band { padding:28px 20px; } }
   .band h2 { color:#fff; }
   .band p { color:#d9e7f7; margin:0 auto 24px; max-width:36em; }
-  .band .btn { background:#fff; color:var(--accent); }
+  .band .btn { background:#fff; color:var(--accent); border-color:#fff; }
+  .band .btn.ghost { background:transparent; color:#fff; border-color:#9cc0e6; }
+  .band .small { font-size:.88rem; margin:18px auto 0; }
   footer { border-top:1px solid var(--line); padding:28px 0 40px; color:var(--muted); font-size:.9rem; }
   footer .wrap { display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; }
 </style>
@@ -92,6 +167,13 @@
       <a class="btn-sm" href="#audit">Free audit</a>
     </nav>
   </div>
+  <div class="subnav" aria-label="Sections">
+    <a href="#how">How it works</a>
+    <a href="#why">What we check</a>
+    <a href="#pricing">Pricing</a>
+    <a href="sample-audit-report.html">Sample report</a>
+    <a href="#about">About</a>
+  </div>
 </header>
 
 <div class="hero">
@@ -99,92 +181,135 @@
     <div>
       <span class="eyebrow">For US importers paying ocean demurrage and detention</span>
       <h1>Check your demurrage and detention invoices before you pay them.</h1>
-      <p class="lead">Under the Federal Maritime Commission's billing rule, a D&amp;D invoice that leaves out required information, or arrives more than 30 days after the charges end, may not be payable. We check each invoice against the rule and help you dispute the ones that fail. You pay a share of what is actually saved, and nothing otherwise.</p>
-      <a class="btn" href="#audit">Get a free audit</a><a class="btn ghost" href="sample-audit-report.html">See a sample report</a>
+      <p class="lead">Under the FMC billing rule, a D&amp;D invoice that is missing required details, or is sent too late, may not be payable. We check every invoice and help you dispute the ones that fail. You pay only from what is saved.</p>
+      <a class="btn" href="#audit">Get a free audit</a><a class="btn ghost" href="#how">See how it works</a>
       <ul class="ticks">
-        <li>No upfront fees</li>
-        <li>No system logins needed</li>
+        <li>Free first audit</li>
+        <li>No system logins</li>
         <li>You approve every dispute</li>
       </ul>
     </div>
-    <div class="card" aria-label="Example of findings from a sample report">
-      <div class="lbl">Sample report, made-up invoices</div>
-      <h3>One month, Savannah and Long Beach</h3>
-      <div class="row"><span>DM-2002: 4 required details missing</span><span class="pill bad">Not payable</span></div>
-      <div class="row"><span>DM-2002: 3 days billed after out-gate</span><span class="pill warn">Overcharge</span></div>
-      <div class="row"><span>DM-2002: free time started before availability</span><span class="pill info">Review</span></div>
-      <div class="row"><span>DM-1001: matches the rule</span><span class="pill ok">OK</span></div>
-      <div class="foot">Illustration only. See the <a href="sample-audit-report.html">full sample report</a>.</div>
+
+    <div class="inv" role="img" aria-label="Illustration: a demurrage invoice checked against the FMC rule, with two required details missing and the invoice sent late">
+      <div class="inv-head"><b>DEMURRAGE INVOICE</b><span>Illustration</span></div>
+      <div class="f"><div><span class="k">Container / B/L</span><span class="v">ABCU 123456-7 · BL 0000001</span></div><span class="tag ok">✓ Shown</span></div>
+      <div class="f"><div><span class="k">Container available</span><span class="v">Mar 3</span></div><span class="tag ok">✓ Shown</span></div>
+      <div class="f miss"><div><span class="k">Free time start and end</span><span class="v">Not on invoice</span></div><span class="tag bad">✗ Missing</span></div>
+      <div class="f miss"><div><span class="k">How to dispute</span><span class="v">Not on invoice</span></div><span class="tag bad">✗ Missing</span></div>
+      <div class="f"><div><span class="k">Charges ended · Invoice sent</span><span class="v">Mar 14 · Apr 25</span></div><span class="tag warn">42 days later</span></div>
+      <div class="verdict"><span aria-hidden="true">⚠</span><span>Fails 46 CFR 541: required details missing, and sent more than 30 days after charges ended.</span></div>
+      <div class="cap">Made-up invoice to show what we check. See a <a href="sample-audit-report.html">full sample report</a>.</div>
     </div>
   </div>
 </div>
 
-<section>
-  <div class="wrap">
-    <h2>Why D&amp;D invoices often fail the rule</h2>
-    <p class="intro">Since May 28, 2024, carriers, marine terminals and NVOCCs must follow 46 CFR Part 541 when they bill demurrage or detention. Three things come up again and again.</p>
-    <div class="grid3">
-      <div class="tile"><h3>Required details are missing</h3><p>Every invoice must show items such as the free time, the container availability date, the rates applied, why you are the liable party, and how to dispute. If any are missing, you have no obligation to pay it.</p><span class="cite">46 CFR 541.5, 541.6</span></div>
-      <div class="tile"><h3>The invoice came too late</h3><p>A billing party that issues an invoice more than 30 days after the charges were last incurred loses the right to collect them.</p><span class="cite">46 CFR 541.7</span></div>
-      <div class="tile"><h3>The days don't add up</h3><p>We recalculate free time and charged days against the container's actual gate-out and return dates, and flag days billed in error.</p><span class="cite">46 CFR 541.6(b), 541.6(c)</span></div>
-    </div>
-  </div>
-</section>
-
 <section class="alt" id="how">
   <div class="wrap">
     <h2>How it works</h2>
-    <p class="intro">Three steps, no software to install and no access to your systems.</p>
-    <div class="grid3">
-      <div class="tile"><div class="num">1</div><h3>Send one month of invoices</h3><p>Email us your D&amp;D invoices as PDFs, with bank and account details blacked out.</p></div>
-      <div class="tile"><div class="num">2</div><h3>Get your report in 2 business days</h3><p>We check every invoice against the rule and show which ones look unpayable or overcharged, and by how much.</p></div>
-      <div class="tile"><div class="num">3</div><h3>You decide what to dispute</h3><p>We draft each dispute for your approval and track the reply. Nothing goes to a carrier without your say-so.</p></div>
-    </div>
+    <p class="intro">Three steps. No software to install, no access to your systems, and nothing is sent to a carrier without your OK.</p>
+    <ol class="steps">
+      <li class="step">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#0b4f94" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div>
+        <div>
+          <span class="when">Day 1</span>
+          <h3>You email one month of invoices</h3>
+          <p>Send your D&amp;D invoices as PDFs, with bank and account details blacked out. Container numbers help us check the dates.</p>
+          <span class="out">Just forward the PDFs</span>
+        </div>
+      </li>
+      <li class="step">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#0b4f94" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13l2 2 4-4"/></svg></div>
+        <div>
+          <span class="when">Within 2 business days</span>
+          <h3>We send your audit report</h3>
+          <p>Every invoice checked against the rule, with the ones that look unpayable or overcharged, and by how much.</p>
+          <span class="out">Free, whatever it finds</span>
+        </div>
+      </li>
+      <li class="step">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#0b4f94" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></div>
+        <div>
+          <span class="when">You decide</span>
+          <h3>You choose what to dispute</h3>
+          <p>We draft each dispute for you to approve, then track the reply. You can leave out any carrier.</p>
+          <span class="out">Fee only on money saved</span>
+        </div>
+      </li>
+    </ol>
+    <div class="reassure"><span>No contract or minimum term</span><span>No deposit or card details</span><span>Your files deleted within 90 days</span></div>
   </div>
 </section>
 
-<section id="pricing">
+<section id="why">
+  <div class="wrap">
+    <h2>What we check on every invoice</h2>
+    <p class="intro">Since May 28, 2024, carriers, marine terminals and NVOCCs must follow 46 CFR Part 541 when they bill demurrage or detention. These are the three problems we look for.</p>
+    <div class="grid3">
+      <div class="tile">
+        <div class="badge b-bad" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M10 12l4 4M14 12l-4 4"/></svg></div>
+        <h3>Required details missing</h3>
+        <p>The rule lists what every invoice must show, such as free time, the availability date, the rates and how to dispute. Under the rule, missing details remove the obligation to pay.</p>
+        <span class="cite">46 CFR 541.5, 541.6</span>
+      </div>
+      <div class="tile">
+        <div class="badge b-warn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>Invoice sent too late</h3>
+        <p>An invoice issued more than 30 days after the charges were last incurred cannot be collected.</p>
+        <span class="cite">46 CFR 541.7</span>
+      </div>
+      <div class="tile">
+        <div class="badge b-info" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
+        <h3>Days that don't add up</h3>
+        <p>We recount free time and charged days against the container's actual gate-out and return dates, and flag days billed in error.</p>
+        <span class="cite">46 CFR 541.6(b), 541.6(c)</span>
+      </div>
+    </div>
+    <details class="rule" style="margin-top:22px">
+      <summary>See everything the rule requires on an invoice</summary>
+      <table>
+        <tr><th>Category</th><th>Examples of required items (46 CFR 541.6)</th></tr>
+        <tr><td>Identification</td><td>Bill of lading and container numbers, port of discharge, why you are the liable party</td></tr>
+        <tr><td>Timing</td><td>Invoice and due dates, free time with start and end dates, container availability date, the exact dates charged</td></tr>
+        <tr><td>Rates</td><td>Total due, the tariff rule or contract applied, the specific rates</td></tr>
+        <tr><td>Disputes</td><td>A contact, a web link describing what to submit, and the dispute timeframes</td></tr>
+        <tr><td>Certifications</td><td>That the charges follow FMC rules and the billing party's own performance did not cause them</td></tr>
+      </table>
+    </details>
+  </div>
+</section>
+
+<section class="alt" id="pricing">
   <div class="wrap">
     <h2>Simple pricing</h2>
-    <p class="intro">The audit is free. You only pay if we save you money.</p>
+    <p class="intro">The audit is free. You only pay if a charge is withdrawn, reduced or refunded.</p>
     <div class="price">
       <div>
         <div class="big">25%</div>
-        <p style="margin:8px 0 0">of the charges withdrawn, reduced or refunded, billed monthly.</p>
+        <p style="margin:8px 0 0">of the money saved, billed monthly.</p>
+        <ul>
+          <li>No saving, no fee</li>
+          <li>No setup fee and no minimum term</li>
+          <li>We never ask for a deposit or card details up front</li>
+        </ul>
       </div>
-      <ul>
-        <li>No saving, no fee</li>
-        <li>No setup fee and no minimum term</li>
-        <li>We never ask for a deposit or card details up front</li>
-      </ul>
+      <div class="example">
+        <div class="lbl">Example</div>
+        <div class="bar" aria-hidden="true"><div class="keep">You keep $1,500</div><div class="fee">Fee $500</div></div>
+        <p>If a carrier withdraws $2,000 of charges after a dispute, our fee is $500 and you keep $1,500. If nothing is withdrawn, you pay nothing.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="alt">
-  <div class="wrap">
-    <h2>What the rule requires on every invoice</h2>
-    <p class="intro">A summary of 46 CFR 541.6. You have at least 30 days from the invoice date to request a waiver or refund (541.8), so it pays to check early.</p>
-    <table>
-      <tr><th>Category</th><th>Examples of required items</th></tr>
-      <tr><td>Identification</td><td>Bill of lading and container numbers, port of discharge, why you are the liable party</td></tr>
-      <tr><td>Timing</td><td>Invoice and due dates, free time in days with start and end dates, container availability date, the exact dates charged</td></tr>
-      <tr><td>Rates</td><td>Total due, the tariff rule or contract applied, the specific rates</td></tr>
-      <tr><td>Disputes</td><td>A contact, a web link describing what to submit, and the dispute timeframes</td></tr>
-      <tr><td>Certifications</td><td>That the charges follow FMC rules and the billing party's own performance did not cause them</td></tr>
-    </table>
-  </div>
-</section>
-
-<section>
+<section class="trust">
   <div class="wrap">
     <h2>Keeping your data safe</h2>
-    <p class="intro">We only need what is on the invoice. Our full approach is in the <a href="privacy.html">privacy policy</a>.</p>
-    <div class="grid2">
-      <div class="tile"><h3>Black out what we don't need</h3><p>Cover account numbers, bank details, signatures and anything about your customers. We need the dates, B/L and container numbers, free time and charges.</p></div>
-      <div class="tile"><h3>No logins, ever</h3><p>We never ask for access to your carrier portals, email or systems.</p></div>
-      <div class="tile"><h3>Nothing is sent without you</h3><p>Every dispute is shown to you first, and you send or approve it yourself.</p></div>
-      <div class="tile"><h3>Your files are deleted</h3><p>We use them only to audit your invoices and delete them within 90 days of finishing, or sooner if you ask.</p></div>
+    <p class="intro">We only need what is on the invoice. Full details are in our <a href="privacy.html">privacy policy</a>.</p>
+    <div class="grid4">
+      <div class="tile"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 12h10"/></svg>Black out the rest</h3><p>Cover bank details, signatures and anything about your customers.</p></div>
+      <div class="tile"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>No logins, ever</h3><p>We never ask for access to your carrier portals, email or systems.</p></div>
+      <div class="tile"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/></svg>You approve all</h3><p>Every dispute is shown to you first. Nothing goes out without you.</p></div>
+      <div class="tile"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Files deleted</h3><p>Used only for your audit and deleted within 90 days, or sooner if you ask.</p></div>
     </div>
   </div>
 </section>
@@ -205,10 +330,11 @@
 <section>
   <div class="wrap">
     <h2>Questions</h2>
-    <details><summary>Is this legal advice?</summary><p>No. We compare invoices with the published FMC rule and your container data, and draft disputes for your approval. For legal questions, talk to a maritime attorney.</p></details>
-    <details><summary>Will disputing hurt my carrier relationship?</summary><p>Disputes are a normal part of the process the rule sets up. You approve every one, and you can exclude any carrier.</p></details>
-    <details><summary>What do you need from me?</summary><p>The invoices, plus container numbers so we can check gate-out and return dates. Nothing else.</p></details>
-    <details><summary>Who pays if a dispute fails?</summary><p>Nobody. If a charge isn't withdrawn, reduced or refunded, there is no fee.</p></details>
+    <details class="q"><summary>Is this legal advice?</summary><p>No. We compare invoices with the published FMC rule and your container data, and draft disputes for your approval. For legal questions, talk to a maritime attorney.</p></details>
+    <details class="q"><summary>Will disputing hurt my carrier relationship?</summary><p>Disputes are a normal part of the process the rule sets up. You approve every one, and you can exclude any carrier.</p></details>
+    <details class="q"><summary>What do you need from me?</summary><p>The invoices, plus container numbers so we can check gate-out and return dates. Nothing else.</p></details>
+    <details class="q"><summary>How long do I have to dispute?</summary><p>The rule gives you at least 30 days from the invoice date to request a waiver or refund (46 CFR 541.8), so it pays to check invoices early.</p></details>
+    <details class="q"><summary>Who pays if a dispute fails?</summary><p>Nobody. If a charge isn't withdrawn, reduced or refunded, there is no fee.</p></details>
   </div>
 </section>
 
@@ -216,8 +342,9 @@
   <div class="wrap">
     <div class="band">
       <h2>Get a free audit of last month's invoices</h2>
-      <p>Send one month of demurrage and detention invoices, with your name, company and roughly how many containers you import each month. We reply within one business day.</p>
-      <a class="btn" href="mailto:bubele@getfreetimecheck.com?subject=Free%20D%26D%20audit">Email bubele@getfreetimecheck.com</a>
+      <p>Email one month of demurrage and detention invoices with your name and company. We reply within one business day.</p>
+      <a class="btn" href="mailto:bubele@getfreetimecheck.com?subject=Free%20D%26D%20audit">Email your invoices</a>
+      <p class="small">Prefer to ask a question first? Write to <a href="mailto:bubele@getfreetimecheck.com?subject=Question%20about%20FreeTime%20Check" style="color:#fff">bubele@getfreetimecheck.com</a>.</p>
     </div>
   </div>
 </section>
