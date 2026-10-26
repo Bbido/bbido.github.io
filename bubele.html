@@ -1,0 +1,252 @@
+<!doctype html>
+<!-- DRAFT founder page v2 (2026-10-26), not published. Inspired by playful personal sites (e.g. iuliu.net) but kept fast,
+     phone-friendly and business-safe: no sound, no loading gate. Background from Musa's CV (Oct 2026); employer kept generic. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bubele Bido | Founder, FreeTime Check</title>
+<meta name="description" content="Bubele Bido builds software that checks paperwork for people. Founder of FreeTime Check, which audits US importers' demurrage and detention invoices.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b4f94'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11.5' stroke='white' stroke-width='3.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+  :root { --ink:#132030; --muted:#566273; --line:#e2e6ec; --accent:#0b4f94; --accent-2:#e8f1fb; --soft:#f5f7fa; --navy:#0a2540; --sea:#123a63; --sun:#ffb547; --c1:#e4572e; --c2:#2a9d8f; --c3:#f2c14e; --c4:#5b8def; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#fff; color:var(--ink); font:17px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  a { color:var(--accent); }
+  .wrap { max-width:1000px; margin:0 auto; padding:0 20px; }
+  mark.todo { background:#fff3c4; color:#7a4b00; padding:0 4px; border-radius:4px; font-style:italic; }
+
+  /* Top bar sits on the dark hero */
+  .top { position:absolute; inset:0 0 auto 0; z-index:5; }
+  .top .wrap { display:flex; justify-content:space-between; align-items:center; height:64px; }
+  .brand { display:flex; gap:10px; align-items:center; color:#fff; font-weight:700; text-decoration:none; }
+  .back { color:#c9d8ea; text-decoration:none; font-size:.95rem; }
+  .back:hover { color:#fff; }
+  @media (max-width:480px) { .back .long { display:none; } }
+
+  /* Hero: illustrated harbour */
+  .hero { position:relative; background:linear-gradient(180deg,#0a2540 0%,#14406b 62%,#1d5a8f 100%); color:#fff; overflow:hidden; }
+  .hero .wrap { position:relative; z-index:2; padding-top:110px; padding-bottom:40px; display:grid; grid-template-columns:auto 1fr; gap:32px; align-items:center; }
+  @media (max-width:640px) { .hero .wrap { grid-template-columns:1fr; gap:18px; padding-top:92px; } }
+  .photo.initials { font:700 2.6rem/1 system-ui,sans-serif; color:#0b4f94; letter-spacing:.02em; }
+  .photo { width:150px; height:150px; border-radius:50%; background:#dbe8f7; border:5px solid #fff; display:flex; align-items:center; justify-content:center; text-align:center; padding:16px; box-shadow:0 14px 40px rgba(0,0,0,.35); }
+  @media (max-width:640px) { .photo { width:112px; height:112px; } }
+  .hi { font-size:.95rem; color:var(--sun); font-weight:700; letter-spacing:.04em; margin:0 0 6px; }
+  h1 { font-size:clamp(2.1rem,5vw,3.2rem); line-height:1.05; margin:0 0 12px; letter-spacing:-.015em; }
+  .tagline { font-size:1.15rem; color:#d5e3f3; margin:0; max-width:32em; }
+  .scene { position:relative; z-index:1; display:block; width:100%; height:auto; margin-top:-10px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .bob { animation:bob 5s ease-in-out infinite; transform-origin:center; }
+    .trolley { animation:trolley 7s ease-in-out infinite alternate; }
+    .hook { animation:hook 7s ease-in-out infinite alternate; }
+    .check { animation:pop 3.5s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+    .cloud { animation:drift 40s linear infinite; }
+  }
+  @keyframes bob { 0%,100% { transform:translateY(0) } 50% { transform:translateY(4px) } }
+  @keyframes trolley { from { transform:translateX(0) } to { transform:translateX(70px) } }
+  @keyframes hook { from { transform:translateX(0) } to { transform:translateX(70px) } }
+  @keyframes pop { 0%,70%,100% { transform:scale(1) } 80% { transform:scale(1.18) } }
+  @keyframes drift { from { transform:translateX(-120px) } to { transform:translateX(1100px) } }
+
+  section { padding:56px 0; }
+  section.alt { background:var(--soft); }
+  h2 { font-size:1.6rem; line-height:1.2; margin:0 0 8px; }
+  .sub { color:var(--muted); margin:0 0 28px; max-width:40em; }
+  #projects h2, #projects .sub, #work h2, #work .sub { text-align:center; margin-left:auto; margin-right:auto; }
+  @media (max-width:760px) { #projects h2, #projects .sub, #work h2, #work .sub { text-align:left; } }
+
+  /* Story */
+  .story { display:grid; grid-template-columns:1.3fr .7fr; gap:36px; align-items:start; }
+  @media (max-width:760px) { .story { grid-template-columns:1fr; gap:20px; } }
+  .story p { margin:0 0 14px; }
+  .now { background:var(--accent-2); border-radius:14px; padding:20px 22px; }
+  .now .lbl { font-size:.75rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); }
+  .now ul { margin:10px 0 0; padding-left:1.1em; }
+  .now li { margin-bottom:6px; }
+
+  /* Projects */
+  .projects { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  @media (max-width:860px) { .projects { grid-template-columns:1fr 1fr; } }
+  @media (max-width:560px) { .projects { grid-template-columns:1fr; } }
+  .proj { background:#fff; border:1px solid var(--line); border-radius:16px; overflow:hidden; transition:transform .18s ease, box-shadow .18s ease; display:flex; flex-direction:column; }
+  .proj:hover { transform:translateY(-4px); box-shadow:0 14px 30px rgba(19,32,48,.10); }
+  .art { height:140px; display:flex; align-items:center; justify-content:center; }
+  .art svg { width:100%; height:100%; }
+  .body { padding:18px 20px 20px; flex:1; display:flex; flex-direction:column; }
+  .meta { font-size:.75rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); }
+  .proj h3 { margin:4px 0 6px; font-size:1.1rem; }
+  .proj p { margin:0 0 12px; color:var(--muted); font-size:.95rem; }
+  .status { margin-top:auto; align-self:flex-start; font-size:.78rem; font-weight:700; padding:3px 10px; border-radius:999px; }
+  .live { color:#127a4a; background:#e7f6ee; }
+  .proto { color:#b54708; background:#fef3e7; }
+
+  /* Principles */
+  .principles { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; list-style:none; margin:0; padding:0; }
+  @media (max-width:860px) { .principles { grid-template-columns:1fr 1fr; } }
+  @media (max-width:480px) { .principles { grid-template-columns:1fr; } }
+  .principles li { background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px; }
+  .principles .n { font-size:1.6rem; line-height:1; margin-bottom:8px; }
+  .principles b { display:block; margin-bottom:4px; }
+  .principles span { color:var(--muted); font-size:.93rem; }
+
+  /* Find me */
+  .find { display:grid; grid-template-columns:1fr 1fr; gap:28px; align-items:start; }
+  @media (max-width:760px) { .find { grid-template-columns:1fr; } }
+  .links { display:grid; gap:10px; }
+  .links a { display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--ink); background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 16px; transition:border-color .15s; }
+  .links a:hover { border-color:var(--accent); }
+  .links svg { flex:none; width:22px; height:22px; color:var(--accent); }
+  .links small { display:block; color:var(--muted); }
+  table.verify { width:100%; border-collapse:collapse; font-size:.93rem; background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .verify td { padding:11px 14px; border-top:1px solid var(--line); vertical-align:top; }
+  .verify tr:first-child td { border-top:0; }
+  .verify td:first-child { color:var(--muted); width:42%; }
+
+  footer { border-top:1px solid var(--line); padding:24px 0 36px; color:var(--muted); font-size:.88rem; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap">
+    <a class="brand" href="./"><svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#fff"/><path d="M9 16.5l4.5 4.5L23 11.5" stroke="#0b4f94" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>FreeTime Check</a>
+    <a class="back" href="./">← <span class="long">Back to the </span>main site</a>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="photo initials" aria-hidden="true">BB</div>
+    <div>
+      <p class="hi">HI, I'M</p>
+      <h1>Bubele Bido.</h1>
+      <p class="tagline">I build software that checks paperwork, so people don't pay what they don't owe. Right now that means ocean demurrage and detention invoices for US importers.</p>
+    </div>
+  </div>
+
+  <!-- Illustrated harbour: a container ship, a crane and an invoice getting checked -->
+  <svg class="scene" viewBox="0 0 1000 230" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <g class="cloud" opacity=".18"><ellipse cx="80" cy="40" rx="60" ry="14" fill="#fff"/><ellipse cx="120" cy="32" rx="40" ry="12" fill="#fff"/></g>
+    <circle cx="860" cy="60" r="34" fill="#ffb547" opacity=".9"/>
+    <!-- crane -->
+    <g stroke="#c9d8ea" stroke-width="5" fill="none" stroke-linecap="round">
+      <path d="M690 210 V70 M740 210 V70 M680 70 H900 M690 120 H740 M690 70 L740 120 M740 70 L690 120"/>
+    </g>
+    <g class="trolley"><rect x="770" y="62" width="34" height="14" rx="3" fill="#ffb547"/></g>
+    <g class="hook"><line x1="787" y1="76" x2="787" y2="118" stroke="#c9d8ea" stroke-width="2"/><rect x="767" y="118" width="40" height="22" rx="2" fill="#e4572e"/></g>
+    <!-- ship -->
+    <g class="bob">
+      <g>
+        <rect x="140" y="128" width="54" height="26" rx="2" fill="#e4572e"/><rect x="196" y="128" width="54" height="26" rx="2" fill="#2a9d8f"/><rect x="252" y="128" width="54" height="26" rx="2" fill="#f2c14e"/><rect x="308" y="128" width="54" height="26" rx="2" fill="#5b8def"/><rect x="364" y="128" width="54" height="26" rx="2" fill="#e4572e"/>
+        <rect x="168" y="100" width="54" height="26" rx="2" fill="#5b8def"/><rect x="224" y="100" width="54" height="26" rx="2" fill="#e4572e"/><rect x="280" y="100" width="54" height="26" rx="2" fill="#2a9d8f"/><rect x="336" y="100" width="54" height="26" rx="2" fill="#f2c14e"/>
+        <rect x="430" y="96" width="46" height="58" rx="3" fill="#e8eef6"/><rect x="438" y="106" width="12" height="10" fill="#5b8def"/><rect x="456" y="106" width="12" height="10" fill="#5b8def"/>
+        <path d="M110 156 H500 L470 196 H140 Z" fill="#0a2540"/>
+        <text x="300" y="183" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#c9d8ea" letter-spacing="2">FREETIME</text>
+      </g>
+    </g>
+    <!-- invoice being checked -->
+    <g transform="translate(560 40)">
+      <rect width="92" height="116" rx="8" fill="#fff"/>
+      <rect x="12" y="16" width="52" height="6" rx="3" fill="#c3cfdc"/>
+      <rect x="12" y="34" width="68" height="5" rx="2.5" fill="#dde5ee"/><rect x="12" y="48" width="60" height="5" rx="2.5" fill="#dde5ee"/>
+      <rect x="12" y="62" width="40" height="5" rx="2.5" fill="#f4b4a8"/><rect x="12" y="76" width="64" height="5" rx="2.5" fill="#dde5ee"/>
+      <g class="check"><circle cx="74" cy="100" r="20" fill="#127a4a"/><path d="M65 100l6 6 12-13" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+    </g>
+    <!-- water -->
+    <path d="M0 196 C80 186 160 206 240 196 S400 186 480 196 S640 206 720 196 S880 186 1000 196 V230 H0 Z" fill="#0e3257"/>
+    <path d="M0 210 C90 202 170 218 260 210 S430 202 520 210 S700 218 790 210 S930 202 1000 210 V230 H0 Z" fill="#0a2540"/>
+  </svg>
+</header>
+
+<section>
+  <div class="wrap story">
+    <div>
+      <h2>Why I started FreeTime Check</h2>
+      <p>I've worked in IT for more than 12 years. I spent four years servicing printers and copiers for businesses, then four years in university ICT support. Since 2022 I've run library systems at a large South African university, where I led the move of more than 8,200 research records to a new repository. I have a BTech in IT and a postgraduate diploma in library and information studies, and I'm finishing a Master of IT.</p>
+      <p>Most of that work comes down to checking records carefully against the rules. FreeTime Check does the same for demurrage invoices.</p>
+      <p>In 2024 the Federal Maritime Commission's billing rule (46 CFR 541) gave US importers clear rights: a demurrage or detention invoice must show specific details and arrive on time, or it may not be payable. Checking every line takes time most logistics teams don't have. So I built a tool to do the checking, and I handle every decision myself.</p>
+    </div>
+    <aside class="now">
+      <div class="lbl">Now · October 2026</div>
+      <ul>
+        <li>Running our first free audits for US importers</li>
+        <li>Taking a few at a time, so each gets my full attention</li>
+        <li>Writing up the FMC rule in plain English</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section class="alt" id="projects">
+  <div class="wrap">
+    <h2>Things I've built</h2>
+    <p class="sub">I like turning tedious checking into software. A few of the things I've made:</p>
+    <div class="projects">
+      <article class="proj">
+        <div class="art" style="background:#e8f1fb"><svg viewBox="0 0 300 140" aria-hidden="true"><rect x="105" y="18" width="90" height="108" rx="8" fill="#fff" stroke="#c3cfdc"/><rect x="118" y="34" width="50" height="6" rx="3" fill="#c3cfdc"/><rect x="118" y="52" width="64" height="5" rx="2.5" fill="#dde5ee"/><rect x="118" y="66" width="44" height="5" rx="2.5" fill="#f4b4a8"/><rect x="118" y="80" width="60" height="5" rx="2.5" fill="#dde5ee"/><circle cx="182" cy="110" r="18" fill="#127a4a"/><path d="M174 110l5 5 11-12" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="body"><span class="meta">2026 · Business</span><h3>FreeTime Check</h3><p>Reads demurrage and detention invoices and flags the ones that break the FMC billing rule.</p><span class="status live">Live</span></div>
+      </article>
+      <article class="proj">
+        <div class="art" style="background:#eef3fb"><svg viewBox="0 0 300 140" aria-hidden="true"><rect x="70" y="26" width="160" height="92" rx="10" fill="#fff" stroke="#c3cfdc"/><rect x="70" y="26" width="160" height="20" rx="10" fill="#0a66c2"/><rect x="86" y="60" width="90" height="6" rx="3" fill="#dde5ee"/><rect x="86" y="74" width="120" height="6" rx="3" fill="#dde5ee"/><rect x="86" y="88" width="70" height="6" rx="3" fill="#dde5ee"/><g transform="translate(196 80)"><circle r="16" fill="#ffb547"/><path d="M-6 0l4 4 8-9" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round"/></g></svg></div>
+        <div class="body"><span class="meta">2026 · Side project</span><h3>LinkedAI</h3><p>A Chrome extension that drafts LinkedIn posts, comments and messages, with its own small backend.</p><span class="status proto">Prototype</span></div>
+      </article>
+      <article class="proj">
+        <div class="art" style="background:#eef7f2"><svg viewBox="0 0 300 140" aria-hidden="true"><rect x="60" y="30" width="180" height="86" rx="10" fill="#fff" stroke="#c3cfdc"/><circle cx="88" cy="58" r="8" fill="#2a9d8f"/><rect x="104" y="54" width="110" height="7" rx="3.5" fill="#dde5ee"/><circle cx="88" cy="88" r="8" fill="#f2c14e"/><rect x="104" y="84" width="84" height="7" rx="3.5" fill="#dde5ee"/><path d="M230 26l12-12M238 34l14-4M226 18l2-14" stroke="#e4572e" stroke-width="3" stroke-linecap="round"/></svg></div>
+        <div class="body"><span class="meta">2026 · Experiment</span><h3>Tender alerts</h3><p>Matches new South African government tenders to the businesses they suit, from the public eTenders feed.</p><span class="status proto">Prototype</span></div>
+      </article>
+      <article class="proj">
+        <div class="art" style="background:#f3effb"><svg viewBox="0 0 300 140" aria-hidden="true"><rect x="60" y="22" width="180" height="100" rx="10" fill="#fff" stroke="#c3cfdc"/><rect x="78" y="84" width="18" height="24" rx="2" fill="#5b8def"/><rect x="104" y="64" width="18" height="44" rx="2" fill="#2a9d8f"/><rect x="130" y="74" width="18" height="34" rx="2" fill="#f2c14e"/><rect x="156" y="48" width="18" height="60" rx="2" fill="#e4572e"/><rect x="186" y="40" width="40" height="6" rx="3" fill="#dde5ee"/><rect x="186" y="54" width="30" height="6" rx="3" fill="#dde5ee"/></svg></div>
+        <div class="body"><span class="meta">2026 · Day job</span><h3>Library statistics dashboard</h3><p>Pulls usage, lending and e-resource numbers from several library systems into one report for university leadership.</p><span class="status live">Built</span></div>
+      </article>
+      <article class="proj">
+        <div class="art" style="background:#fbf3ea"><svg viewBox="0 0 300 140" aria-hidden="true"><rect x="52" y="40" width="70" height="64" rx="8" fill="#fff" stroke="#c3cfdc"/><rect x="178" y="40" width="70" height="64" rx="8" fill="#fff" stroke="#c3cfdc"/><rect x="64" y="54" width="46" height="5" rx="2.5" fill="#dde5ee"/><rect x="64" y="68" width="38" height="5" rx="2.5" fill="#dde5ee"/><rect x="64" y="82" width="42" height="5" rx="2.5" fill="#dde5ee"/><rect x="190" y="54" width="46" height="5" rx="2.5" fill="#dde5ee"/><rect x="190" y="68" width="38" height="5" rx="2.5" fill="#dde5ee"/><circle cx="226" cy="88" r="10" fill="#127a4a"/><path d="M221 88l3 3 6-6" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M132 72h36m-8-8l8 8-8 8" stroke="#e4572e" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="body"><span class="meta">Day job</span><h3>Research repository move</h3><p>Moved more than 8,200 theses and research records to a new repository, checking and fixing the records along the way.</p><span class="status live">Done</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="wrap">
+    <h2>How I work</h2>
+    <p class="sub">The same rules for every client.</p>
+    <ul class="principles">
+      <li><div class="n" aria-hidden="true">✋</div><b>You approve everything</b><span>No dispute goes to a carrier without your OK.</span></li>
+      <li><div class="n" aria-hidden="true">🔒</div><b>No logins</b><span>I never ask for access to your systems or carrier portals.</span></li>
+      <li><div class="n" aria-hidden="true">💵</div><b>Paid only from savings</b><span>The audit is free. The fee is 25% of what is actually withdrawn or refunded.</span></li>
+      <li><div class="n" aria-hidden="true">💬</div><b>Straight answers</b><span>If your invoices look fine, I'll say so, and that's the end of it.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="alt" id="find">
+  <div class="wrap find">
+    <div>
+      <h2>Where to find me</h2>
+      <p class="sub">I answer every email myself, usually within one business day.</p>
+      <div class="links">
+        <a href="mailto:bubele@getfreetimecheck.com?subject=Hello%20Bubele"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>Email<small>bubele@getfreetimecheck.com</small></span></a>
+        <a href="https://www.linkedin.com/in/bubele-bido-99811677"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.6 8.65 21 11.2 21 14.5V21h-4v-5.8c0-1.4 0-3.2-1.95-3.2S12.8 13.5 12.8 15.1V21H9z"/></svg><span>LinkedIn<small>linkedin.com/in/bubele-bido-99811677</small></span></a>
+        <a href="./#audit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 14l2 2 4-4"/></svg><span>Get a free audit<small>Send one month of D&amp;D invoices</small></span></a>
+      </div>
+    </div>
+    <div>
+      <h2>Check who you're dealing with</h2>
+      <p class="sub">Everything here can be looked up.</p>
+      <table class="verify">
+        <tr><td>Company</td><td>Bido Ventures (Pty) Ltd, registered with CIPC, South Africa</td></tr>
+        <tr><td>Registration no.</td><td>2026/830560/07</td></tr>
+        <tr><td>Postal address</td><td>PO Box 158, Burgersdorp, 9744, South Africa</td></tr>
+        <tr><td>Based in</td><td>Gqeberha, South Africa</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© 2026 Bido Ventures (Pty) Ltd · Reg. 2026/830560/07 · <a href="privacy.html">Privacy policy</a></div>
+</footer>
+
+</body>
+</html>
