@@ -1,0 +1,381 @@
+<!doctype html>
+<!-- FreeTime Check free invoice checker. Runs fully in the browser; no data leaves the page.
+     Rule content mirrors dd-recovery/src/rules.js (46 CFR 541.5-541.8). -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Is my demurrage invoice payable? | Free FMC invoice checker | FreeTime Check</title>
+<meta name="description" content="Free tool: check a US ocean demurrage or detention invoice against the FMC billing rule (46 CFR 541). Find out in two minutes whether it is missing required details or was sent too late to be payable.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b4f94'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11.5' stroke='white' stroke-width='3.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+</head>
+<body>
+<style>
+  /* Layout: site header, a short intro, then a two-column tool (questions left, live verdict right), stacking on phones. */
+  :root {
+    --ink:#132030; --muted:#566273; --line:#e2e6ec; --accent:#0b4f94; --accent-2:#e8f1fb;
+    --bg:#ffffff; --soft:#f5f7fa; --card:#ffffff; --on-accent:#ffffff;
+    --ok:#127a4a; --okbg:#e7f6ee; --warn:#b54708; --warnbg:#fef3e7; --bad:#b42318; --badbg:#fdecea;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --ink:#e6ebf2; --muted:#9aa6b6; --line:#2a3544; --accent:#5aa2ec; --accent-2:#13253a;
+    --bg:#0e151e; --soft:#141d29; --card:#18222f; --on-accent:#0e151e;
+    --ok:#4cc38a; --okbg:#10291e; --warn:#f0a35e; --warnbg:#2e1f10; --bad:#f2837a; --badbg:#321716; color-scheme:dark; } }
+  :root[data-theme="dark"] {
+    --ink:#e6ebf2; --muted:#9aa6b6; --line:#2a3544; --accent:#5aa2ec; --accent-2:#13253a;
+    --bg:#0e151e; --soft:#141d29; --card:#18222f; --on-accent:#0e151e;
+    --ok:#4cc38a; --okbg:#10291e; --warn:#f0a35e; --warnbg:#2e1f10; --bad:#f2837a; --badbg:#321716; color-scheme:dark; }
+  * { box-sizing:border-box; }
+  [hidden] { display:none !important; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  a { color:var(--accent); }
+  .wrap { max-width:1080px; margin:0 auto; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); }
+  header.top { border-bottom:1px solid var(--line); background:var(--bg); }
+  header.top .wrap { display:flex; align-items:center; justify-content:space-between; height:60px; gap:12px; }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:700; font-size:1.05rem; color:var(--ink); text-decoration:none; }
+  .brand svg { flex:none; }
+  .back { font-size:.92rem; color:var(--muted); text-decoration:none; }
+  .back:hover { color:var(--ink); }
+  .intro { padding-block:36px 24px; background:linear-gradient(180deg, var(--accent-2), var(--bg)); }
+  .eyebrow { display:inline-block; font-size:.82rem; font-weight:600; color:var(--accent); background:var(--card); border:1px solid var(--line); padding:3px 10px; border-radius:999px; margin-bottom:12px; }
+  h1 { font-size:clamp(1.7rem, 3.6vw, 2.4rem); line-height:1.15; margin:0 0 12px; letter-spacing:-.01em; text-wrap:balance; }
+  .lead { color:var(--muted); margin:0; max-width:40em; font-size:1.06rem; }
+  .privacy { margin:14px 0 0; font-size:.9rem; color:var(--muted); display:flex; gap:8px; align-items:center; }
+  .privacy svg { flex:none; color:var(--ok); }
+
+  .tool { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,.95fr); gap:28px; align-items:start; padding-block:8px 56px; }
+  @media (max-width: 880px) { .tool { grid-template-columns:minmax(0,1fr); } }
+  fieldset { border:1px solid var(--line); border-radius:12px; padding:18px 18px 8px; margin:0 0 18px; background:var(--card); min-width:0; }
+  legend { font-weight:700; padding:0 6px; font-size:1.02rem; }
+  .sample { display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; justify-content:space-between; background:var(--warnbg); color:var(--ink); border-radius:10px; padding:10px 14px; margin-bottom:18px; font-size:.92rem; }
+  .sample[hidden] { display:none; }
+  .linkbtn { background:none; border:0; padding:0; color:var(--accent); font:inherit; font-weight:600; cursor:pointer; text-decoration:underline; }
+  .row { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px; margin-bottom:14px; }
+  @media (max-width: 520px) { .row { grid-template-columns:minmax(0,1fr); } }
+  label.f { display:flex; flex-direction:column; gap:5px; font-size:.9rem; font-weight:600; }
+  label.f small { font-weight:400; color:var(--muted); }
+  input[type=date] { font:inherit; padding:9px 10px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--ink); width:100%; }
+  .choice { display:flex; flex-wrap:wrap; gap:8px; margin:4px 0 14px; }
+  .choice-label { font-size:.9rem; font-weight:600; margin:0; }
+  .pill input { position:absolute; opacity:0; pointer-events:none; }
+  .pill span { display:inline-block; padding:7px 13px; border:1px solid var(--line); border-radius:999px; font-size:.9rem; cursor:pointer; background:var(--bg); }
+  .pill input:checked + span { background:var(--accent); border-color:var(--accent); color:var(--on-accent); font-weight:600; }
+  .pill input:focus-visible + span, .seg input:focus-visible + span { outline:2px solid var(--accent); outline-offset:2px; }
+
+  .item { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:6px 14px; align-items:center; padding:11px 0; border-top:1px dashed var(--line); }
+  .item:first-of-type { border-top:0; }
+  .item .q { font-size:.95rem; }
+  .item .q small { display:block; color:var(--muted); font-size:.8rem; }
+  @media (max-width: 520px) { .item { grid-template-columns:minmax(0,1fr); } }
+  .seg { display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  .seg label { position:relative; }
+  .seg input { position:absolute; opacity:0; pointer-events:none; }
+  .seg span { display:block; padding:6px 11px; font-size:.84rem; cursor:pointer; background:var(--bg); border-left:1px solid var(--line); white-space:nowrap; }
+  .seg label:first-child span { border-left:0; }
+  .seg input[value=yes]:checked + span { background:var(--okbg); color:var(--ok); font-weight:700; }
+  .seg input[value=no]:checked + span { background:var(--badbg); color:var(--bad); font-weight:700; }
+  .seg input[value=unsure]:checked + span { background:var(--warnbg); color:var(--warn); font-weight:700; }
+  .group-h { margin:14px 0 2px; font-size:.76rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .group-h:first-of-type { margin-top:0; }
+
+  .result { position:sticky; top:16px; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px; box-shadow:0 12px 30px rgba(19,32,48,.08); min-width:0; }
+  @media (max-width: 880px) { .result { position:static; } }
+  .verdict { border-radius:10px; padding:14px 16px; margin-bottom:14px; }
+  .verdict .lbl { font-size:.74rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+  .verdict .big { font-size:1.35rem; font-weight:800; line-height:1.2; margin-top:2px; }
+  .verdict p { margin:6px 0 0; font-size:.92rem; }
+  .v-bad { background:var(--badbg); color:var(--bad); }
+  .v-warn { background:var(--warnbg); color:var(--warn); }
+  .v-ok { background:var(--okbg); color:var(--ok); }
+  .verdict p { color:var(--ink); }
+  .findings { list-style:none; padding:0; margin:0 0 14px; display:flex; flex-direction:column; gap:10px; }
+  .findings li { display:grid; grid-template-columns:22px minmax(0,1fr); gap:8px; font-size:.93rem; }
+  .findings .mk { width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:800; }
+  .mk.bad { background:var(--badbg); color:var(--bad); }
+  .mk.warn { background:var(--warnbg); color:var(--warn); }
+  .mk.ok { background:var(--okbg); color:var(--ok); }
+  .findings .cite { display:block; color:var(--muted); font-size:.78rem; }
+  .deadline { display:flex; justify-content:space-between; gap:12px; align-items:baseline; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:12px 0; margin-bottom:16px; font-size:.92rem; }
+  .deadline b { font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .deadline small { display:block; color:var(--muted); font-size:.78rem; }
+  .cta h3 { margin:0 0 4px; font-size:1.05rem; }
+  .cta p { margin:0 0 12px; color:var(--muted); font-size:.92rem; }
+  .btn { display:inline-block; background:var(--accent); color:var(--on-accent); padding:11px 18px; border-radius:9px; text-decoration:none; font-weight:600; border:1px solid var(--accent); font:inherit; font-weight:600; cursor:pointer; }
+  .btn.ghost { background:var(--card); color:var(--accent); }
+  .btns { display:flex; flex-wrap:wrap; gap:10px; }
+  .addr { margin:10px 0 0; font-size:.85rem; color:var(--muted); }
+  .addr code { user-select:all; color:var(--ink); }
+  #copyText { width:100%; margin-top:10px; font:13px/1.4 ui-monospace, Menlo, monospace; background:var(--soft); color:var(--ink); border:1px solid var(--line); border-radius:8px; padding:8px; }
+  .copied { font-size:.85rem; color:var(--ok); margin-left:4px; }
+  .fine { margin:16px 0 0; font-size:.78rem; color:var(--muted); }
+  footer { border-top:1px solid var(--line); padding-block:24px 36px; color:var(--muted); font-size:.85rem; }
+  footer .wrap { display:flex; flex-wrap:wrap; justify-content:space-between; gap:10px; }
+  @media (prefers-reduced-motion: no-preference) { .verdict { transition:background-color .2s, color .2s; } }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#0b4f94"/><path d="M9 16.5l4.5 4.5L23 11.5" stroke="#fff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      FreeTime Check
+    </a>
+    <a class="back" href="index.html">About our audits</a>
+  </div>
+</header>
+
+<div class="intro">
+  <div class="wrap">
+    <span class="eyebrow">Free tool for US importers and exporters</span>
+    <h1>Is your demurrage or detention invoice payable?</h1>
+    <p class="lead">Answer a few questions about one invoice from a carrier, terminal or NVOCC. We check it against the FMC billing rule (46 CFR Part 541), which says an invoice that leaves out required details, or arrives more than 30 days late, does not have to be paid.</p>
+    <p class="privacy"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Your answers stay in your browser. Nothing is uploaded or saved.</p>
+  </div>
+</div>
+
+<div class="wrap tool">
+  <form id="form" novalidate>
+    <div class="sample" id="sample">
+      <span><b>Example invoice loaded</b> so you can see how it works. Replace the answers with your own.</span>
+      <button type="button" class="linkbtn" id="clear">Start with a blank invoice</button>
+    </div>
+
+    <fieldset>
+      <legend>About the invoice</legend>
+      <p class="choice-label">Who sent it?</p>
+      <div class="choice" role="radiogroup" aria-label="Who sent the invoice">
+        <label class="pill"><input type="radio" name="sender" id="s-carrier" value="carrier"><span>Ocean carrier</span></label>
+        <label class="pill"><input type="radio" name="sender" id="s-terminal" value="terminal"><span>Marine terminal</span></label>
+        <label class="pill"><input type="radio" name="sender" id="s-nvocc" value="nvocc"><span>NVOCC or forwarder</span></label>
+      </div>
+      <p class="choice-label">Is the shipment an import or an export?</p>
+      <div class="choice" role="radiogroup" aria-label="Import or export">
+        <label class="pill"><input type="radio" name="direction" id="d-import" value="import"><span>Import</span></label>
+        <label class="pill"><input type="radio" name="direction" id="d-export" value="export"><span>Export</span></label>
+      </div>
+      <div class="row">
+        <label class="f" for="invoiceDate">Invoice date<small>The date printed on the invoice</small><input type="date" id="invoiceDate"></label>
+        <label class="f" for="lastDay" id="lastDayLabel">Last day charged<small>The final day the charges cover</small><input type="date" id="lastDay"></label>
+      </div>
+      <div class="row" id="nvoccRow" hidden>
+        <label class="f" for="nvoccGot">When the NVOCC got the carrier's invoice<small>Leave blank if you don't know</small><input type="date" id="nvoccGot"></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>What does the invoice show?</legend>
+      <div id="items"></div>
+    </fieldset>
+  </form>
+
+  <aside class="result" aria-live="polite">
+    <div class="verdict" id="verdict"></div>
+    <ul class="findings" id="findings"></ul>
+    <div class="deadline" id="deadline" hidden></div>
+    <div class="cta">
+      <h3>Want us to check it properly?</h3>
+      <p>Email us the invoice PDF, with bank details blacked out. We'll check the dates against the container's real gate-out and return, and draft the dispute for you to approve. The audit is free. If a charge is withdrawn or refunded, our fee is 25% of what you save.</p>
+      <div class="btns">
+        <a class="btn" id="mail" href="mailto:bubele@getfreetimecheck.com">Email us this invoice</a>
+        <button type="button" class="btn ghost" id="copy">Copy my results</button><span class="copied" id="copied" hidden>Copied</span>
+      </div>
+      <textarea id="copyText" rows="6" readonly hidden aria-label="Your results to copy"></textarea>
+      <p class="addr">Or write to <code>bubele@getfreetimecheck.com</code></p>
+    </div>
+    <p class="fine">This is a quick screening based on your answers, not legal advice. Some contracts and tariffs add their own terms. Under the rule you have at least 30 days from the invoice date to ask for a waiver or refund, so check before that window closes.</p>
+  </aside>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Bido Ventures (Pty) Ltd · Reg. 2026/830560/07 · South Africa</span>
+    <span><a href="privacy.html">Privacy policy</a> · <a href="index.html">FreeTime Check</a></span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Required invoice contents under 46 CFR 541.6. "only" limits an item to imports or exports.
+  var GROUPS = [
+    ["Identification", [
+      ["bl", "Bill of lading number", "", "541.6(a)"],
+      ["cntr", "Container number(s)", "", "541.6(a)"],
+      ["pod", "Port of discharge", "", "541.6(a)", "import"],
+      ["basis", "Why you are the party being billed", "For example, that you are the consignee or the shipper on the bill of lading", "541.6(a)"]
+    ]],
+    ["Dates", [
+      ["due", "Invoice due date", "", "541.6(b)"],
+      ["ftdays", "Allowed free time, in days", "", "541.6(b)"],
+      ["ftdates", "Free time start and end dates", "Both dates, not just the number of days", "541.6(b)"],
+      ["avail", "Date the container was available for pickup", "", "541.6(b)", "import"],
+      ["ret", "Earliest date the container could be returned", "", "541.6(b)", "export"],
+      ["days", "The specific dates being charged", "", "541.6(b)"]
+    ]],
+    ["Charges", [
+      ["total", "Total amount due", "", "541.6(c)"],
+      ["rule", "The tariff rule, schedule or contract applied", "", "541.6(c)"],
+      ["rates", "The daily rate(s) used", "", "541.6(c)"]
+    ]],
+    ["How to dispute", [
+      ["contact", "A contact for disputes, refunds or waivers", "An email, phone number or named person", "541.6(d)"],
+      ["url", "A web link or QR code explaining what to send with a dispute", "", "541.6(d)"],
+      ["times", "How long you have to dispute, and how long they have to reply", "", "541.6(d)"]
+    ]],
+    ["Statements", [
+      ["cert1", "A statement that the charges follow FMC rules", "", "541.6(e)"],
+      ["cert2", "A statement that the billing party's own performance did not cause the charges", "", "541.6(e)"]
+    ]]
+  ];
+
+  // Example: a made-up import invoice from a carrier, sent 42 days late, missing free time dates and dispute link.
+  var SAMPLE = {
+    sender: "carrier", direction: "import", invoiceDate: null, lastDay: null, nvoccGot: "",
+    answers: { bl:"yes", cntr:"yes", pod:"yes", basis:"unsure", due:"yes", ftdays:"yes", ftdates:"no", avail:"yes", ret:"yes", days:"yes",
+               total:"yes", rule:"yes", rates:"yes", contact:"yes", url:"no", times:"no", cert1:"yes", cert2:"yes" }
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var itemsEl = $("items");
+  var html = "";
+  GROUPS.forEach(function (g) {
+    html += '<p class="group-h">' + g[0] + "</p>";
+    g[1].forEach(function (it) {
+      var key = it[0];
+      html += '<div class="item" data-key="' + key + '"' + (it[4] ? ' data-only="' + it[4] + '"' : "") + '>' +
+        '<div class="q">' + it[1] + (it[2] ? "<small>" + it[2] + "</small>" : "") + "</div>" +
+        '<div class="seg" role="radiogroup" aria-label="' + it[1] + '">' +
+        ["yes", "no", "unsure"].map(function (v) {
+          var txt = v === "yes" ? "Shown" : v === "no" ? "Missing" : "Not sure";
+          return '<label><input type="radio" name="q-' + key + '" id="q-' + key + "-" + v + '" value="' + v + '"><span>' + txt + "</span></label>";
+        }).join("") + "</div></div>";
+    });
+  });
+  itemsEl.innerHTML = html;
+
+  var ITEMS = {};
+  GROUPS.forEach(function (g) { g[1].forEach(function (it) { ITEMS[it[0]] = { label: it[1], cite: it[3], only: it[4] }; }); });
+
+  function radio(name) { var el = document.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ""; }
+  function setRadio(name, v) { document.querySelectorAll('input[name="' + name + '"]').forEach(function (el) { el.checked = el.value === v; }); }
+
+  var DAY = 86400000;
+  function parse(s) { return /^\d{4}-\d{2}-\d{2}$/.test(s || "") ? Date.parse(s + "T00:00:00Z") : null; }
+  function diff(a, b) { var x = parse(a), y = parse(b); return x === null || y === null ? null : Math.round((y - x) / DAY); }
+  function add(s, n) { var t = parse(s); return t === null ? null : new Date(t + n * DAY).toISOString().slice(0, 10); }
+  function nice(s) { var t = parse(s); return t === null ? "" : new Date(t).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }); }
+  function todayIso() { var d = new Date(); return new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())).toISOString().slice(0, 10); }
+
+  var lastText = "";
+
+  function evaluate() {
+    var sender = radio("sender"), direction = radio("direction") || "import";
+    var invoiceDate = $("invoiceDate").value, lastDay = $("lastDay").value, nvoccGot = $("nvoccGot").value;
+    $("nvoccRow").hidden = sender !== "nvocc";
+
+    document.querySelectorAll(".item").forEach(function (el) {
+      var only = el.getAttribute("data-only");
+      el.hidden = !!only && only !== direction;
+    });
+
+    var missing = [], unsure = [], unanswered = 0;
+    Object.keys(ITEMS).forEach(function (k) {
+      var it = ITEMS[k];
+      if (it.only && it.only !== direction) return;
+      var a = radio("q-" + k);
+      if (a === "no") missing.push(it); else if (a === "unsure") unsure.push(it); else if (a !== "yes") unanswered++;
+    });
+
+    var findings = []; // [severity, text, cite]
+    if (missing.length) {
+      findings.push(["bad", "Missing " + missing.length + " required detail" + (missing.length > 1 ? "s" : "") + ": " +
+        missing.map(function (m) { return m.label.charAt(0).toLowerCase() + m.label.slice(1); }).join("; ") + ".",
+        "46 CFR 541.5 and 541.6: an invoice without required information does not have to be paid"]);
+    }
+
+    var late = false, clock = sender === "nvocc" ? nvoccGot : lastDay;
+    var lag = diff(clock, invoiceDate);
+    if (sender === "nvocc" && !nvoccGot) {
+      findings.push(["warn", "For an NVOCC, the 30-day limit runs from when it received the carrier's invoice. We can't check timing without that date, so ask the NVOCC for it.", "46 CFR 541.7(b)"]);
+    } else if (lag !== null && lag > 30) {
+      late = true;
+      findings.push(["bad", "Sent " + lag + " days after " + (sender === "nvocc" ? "the NVOCC received the carrier's invoice" : "the charges ended") + ". The limit is 30 days.",
+        (sender === "nvocc" ? "46 CFR 541.7(b)" : "46 CFR 541.7(a)") + ": a late invoice does not have to be paid"]);
+    } else if (lag !== null && lag < 0) {
+      findings.push(["warn", "The invoice date is before the last day charged. Check both dates.", "46 CFR 541.6(b)"]);
+    } else if (lag !== null) {
+      findings.push(["ok", "Sent " + lag + " day" + (lag === 1 ? "" : "s") + " after " + (sender === "nvocc" ? "the NVOCC received the carrier's invoice" : "the charges ended") + ", within the 30-day limit.", "46 CFR 541.7"]);
+    } else {
+      findings.push(["warn", "Add the invoice date and the last day charged to check the 30-day limit.", "46 CFR 541.7"]);
+    }
+
+    if (unsure.length) {
+      findings.push(["warn", "Not sure about " + unsure.length + " item" + (unsure.length > 1 ? "s" : "") + ": " +
+        unsure.map(function (m) { return m.label.charAt(0).toLowerCase() + m.label.slice(1); }).join("; ") + ". If any is missing, the invoice fails.", "46 CFR 541.6"]);
+    }
+    if (unanswered) findings.push(["warn", unanswered + " question" + (unanswered > 1 ? "s" : "") + " still unanswered.", ""]);
+    if (!missing.length && !unsure.length && !unanswered) findings.unshift(["ok", "Shows every required detail you were asked about.", "46 CFR 541.6"]);
+
+    var v = $("verdict"), kind, big, sub;
+    if (missing.length || late) {
+      kind = "v-bad"; big = "Likely not payable";
+      sub = "Based on your answers, this invoice fails the FMC billing rule. You can ask the billing party to withdraw it.";
+    } else if (unsure.length || unanswered || findings.some(function (f) { return f[0] === "warn"; })) {
+      kind = "v-warn"; big = "Check a few things";
+      sub = "Nothing fails yet, but some answers are open. Each of them could make the invoice unpayable.";
+    } else {
+      kind = "v-ok"; big = "Passes the basic checks";
+      sub = "The invoice looks complete and on time. The days charged can still be wrong, which a full audit checks against the container's real dates.";
+    }
+    v.className = "verdict " + kind;
+    v.innerHTML = '<div class="lbl">Result</div><div class="big">' + big + "</div><p>" + sub + "</p>";
+
+    $("findings").innerHTML = findings.map(function (f) {
+      var mark = f[0] === "ok" ? "✓" : f[0] === "bad" ? "✕" : "!";
+      return '<li><span class="mk ' + f[0] + '" aria-hidden="true">' + mark + "</span><span>" + f[1] + (f[2] ? '<span class="cite">' + f[2] + "</span>" : "") + "</span></li>";
+    }).join("");
+
+    var dl = $("deadline");
+    var deadline = add(invoiceDate, 30);
+    if (deadline) {
+      var left = diff(todayIso(), deadline);
+      var when = left > 1 ? left + " days left" : left === 1 ? "1 day left" : left === 0 ? "Last day today" : "Window has passed";
+      dl.hidden = false;
+      dl.innerHTML = "<span>Ask for a waiver or refund by<small>At least 30 days from the invoice date (46 CFR 541.8). The invoice may allow longer.</small></span><b>" + nice(deadline) + "<small>" + when + "</small></b>";
+    } else { dl.hidden = true; }
+
+    var lines = ["FreeTime Check result: " + big];
+    lines.push("Sender: " + (sender || "not given") + "; " + direction + ". Invoice date: " + (invoiceDate || "not given") + "; last day charged: " + (lastDay || "not given") + ".");
+    findings.forEach(function (f) { lines.push("- " + f[1] + (f[2] ? " (" + f[2] + ")" : "")); });
+    if (deadline) lines.push("Dispute window: by " + nice(deadline) + ".");
+    lastText = lines.join("\n");
+    $("mail").href = "mailto:bubele@getfreetimecheck.com?subject=" + encodeURIComponent("Invoice check: " + big) +
+      "&body=" + encodeURIComponent(lastText + "\n\nI've attached the invoice PDF (bank details blacked out).\n");
+  }
+
+  function load(s) {
+    setRadio("sender", s.sender); setRadio("direction", s.direction);
+    $("invoiceDate").value = s.invoiceDate; $("lastDay").value = s.lastDay; $("nvoccGot").value = s.nvoccGot;
+    Object.keys(ITEMS).forEach(function (k) { setRadio("q-" + k, s.answers[k] || ""); });
+    evaluate();
+  }
+
+  $("form").addEventListener("change", evaluate);
+  $("form").addEventListener("input", evaluate);
+  $("form").addEventListener("submit", function (e) { e.preventDefault(); });
+  $("clear").addEventListener("click", function () {
+    load({ sender: "", direction: "import", invoiceDate: "", lastDay: "", nvoccGot: "", answers: {} });
+    $("sample").hidden = true;
+  });
+  $("copy").addEventListener("click", function () {
+    var done = function () { $("copied").hidden = false; setTimeout(function () { $("copied").hidden = true; }, 2000); };
+    var fallback = function () { var t = $("copyText"); t.hidden = false; t.value = lastText; t.focus(); t.select(); };
+    try { navigator.clipboard.writeText(lastText).then(done, fallback); } catch (e) { fallback(); }
+  });
+
+  // Keep the example recent: charges ended 50 days ago, invoice dated 8 days ago (42 days late).
+  SAMPLE.lastDay = add(todayIso(), -50);
+  SAMPLE.invoiceDate = add(todayIso(), -8);
+  load(SAMPLE);
+})();
+</script>
+</body>
+</html>
