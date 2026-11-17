@@ -106,6 +106,9 @@
   .addr { margin:10px 0 0; font-size:.85rem; color:var(--muted); }
   .addr code { user-select:all; color:var(--ink); }
   #copyText { width:100%; margin-top:10px; font:13px/1.4 ui-monospace, Menlo, monospace; background:var(--soft); color:var(--ink); border:1px solid var(--line); border-radius:8px; padding:8px; }
+  .paid { margin-top:16px; padding-top:14px; border-top:1px dashed var(--line); }
+  .paid p { margin:0 0 10px; color:var(--ink); font-size:.92rem; }
+  .paid small { display:block; margin-top:8px; color:var(--muted); font-size:.8rem; }
   .copied { font-size:.85rem; color:var(--ok); margin-left:4px; }
   .fine { margin:16px 0 0; font-size:.78rem; color:var(--muted); }
   footer { border-top:1px solid var(--line); padding-block:24px 36px; color:var(--muted); font-size:.85rem; }
@@ -177,6 +180,11 @@
       <div class="btns">
         <a class="btn" id="mail" href="mailto:bubele@getfreetimecheck.com">Email us this invoice</a>
         <button type="button" class="btn ghost" id="copy">Copy my results</button><span class="copied" id="copied" hidden>Copied</span>
+      </div>
+      <div class="paid">
+        <p><b>Prefer a fixed price?</b> We review this one invoice and, if it fails the rule, write the dispute letter for you. <b>$79</b>, paid upfront.</p>
+        <a class="btn ghost" href="https://www.paypal.com/ncp/payment/8PSSU69NPRNXS" target="_blank" rel="noopener">Get a dispute letter for $79</a>
+        <small>Paid securely through PayPal. Afterwards you'll see where to send the invoice.</small>
       </div>
       <textarea id="copyText" rows="6" readonly hidden aria-label="Your results to copy"></textarea>
       <p class="addr">Or write to <code>bubele@getfreetimecheck.com</code></p>
